@@ -1,0 +1,863 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Практикумы 5–6 · Пять рабочих кейсов</title><style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;
+  --card:#ffffff;
+  --border:#e2e8f0;
+  --indigo:#0047ff;
+  --indigo-dk:#002060;
+  --indigo-lt:#e5efff;
+  --cyan:#0ea5e9;
+  --cyan-lt:#e0f2fe;
+  --amber:#f59e0b;
+  --amber-lt:#fffbeb;
+  --green:#16a34a;
+  --green-lt:#f0fdf4;
+  --red:#dc2626;
+  --red-lt:#fef2f2;
+  --text:#0f172a;
+  --muted:#64748b;
+  --nav-h:56px;
+}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(0,71,255,.14),transparent 32%),
+    radial-gradient(circle at 85% 6%,rgba(14,165,233,.13),transparent 34%),
+    linear-gradient(180deg,#f8fafc 0%,#e5efff 30%,#f8fafc 100%);
+  color:var(--text);
+  line-height:1.65;
+  overflow-x:hidden;
+}
+
+/* NAV */
+nav.top{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(255,255,255,.97);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);box-shadow:0 1px 10px rgba(0,0,0,.06);
+  display:flex;align-items:center;padding:0 20px;z-index:900;
+  gap:2px;overflow-x:auto;scrollbar-width:none;
+}
+nav.top::-webkit-scrollbar{display:none}
+.nav-logo{font-weight:900;font-size:.93rem;color:var(--indigo-dk);white-space:nowrap;margin:0 10px 0 4px;flex-shrink:0}
+.nav-sep{width:1px;height:18px;background:var(--border);margin:0 6px;flex-shrink:0}
+.nav-link{padding:5px 10px;border-radius:6px;font-size:.75rem;font-weight:700;color:var(--muted);text-decoration:none;white-space:nowrap;transition:color .2s,background .2s;flex-shrink:0}
+.nav-link:hover,.nav-link.active{color:var(--indigo);background:var(--indigo-lt)}
+.nav-link:focus-visible,a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+
+/* HERO */
+#hero{
+  min-height:100vh;padding:calc(var(--nav-h) + 56px) 24px 64px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:22px}
+.hero-badge{padding:5px 14px;background:var(--indigo-lt);border:1px solid #c7d2fe;border-radius:100px;font-size:.78rem;font-weight:700;color:var(--indigo-dk)}
+.hero-title{font-size:clamp(2rem,5.5vw,3.6rem);font-weight:900;line-height:1.12;letter-spacing:-1.5px;margin-bottom:16px;max-width:900px}
+.hero-title em{color:var(--indigo);font-style:normal}
+.hero-sub{font-size:1.05rem;color:var(--muted);max-width:660px;margin-bottom:36px}
+.hero-img{max-width:900px;width:100%;margin-bottom:40px}
+.hero-nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:820px}
+.hero-nav a{padding:8px 16px;border-radius:10px;background:var(--card);border:1px solid var(--border);font-size:.82rem;font-weight:600;color:var(--text);text-decoration:none;box-shadow:0 2px 8px rgba(15,23,42,.05);transition:transform .15s,box-shadow .15s}
+.hero-nav a:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,71,255,.15)}
+
+/* SECTIONS */
+.sec{max-width:1180px;margin:0 auto;padding:72px 24px}
+.sec-head{margin-bottom:36px}
+.num-badge{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:13px;font-size:1.1rem;font-weight:900;color:#fff;margin-bottom:14px}
+.n1{background:linear-gradient(135deg,#0047ff,#818cf8)}
+.n2{background:linear-gradient(135deg,#0ea5e9,#38bdf8)}
+.n3{background:linear-gradient(135deg,#8b5cf6,#a78bfa)}
+.n4{background:linear-gradient(135deg,#16a34a,#4ade80)}
+.n5{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.n6{background:linear-gradient(135deg,#ec4899,#f472b6)}
+.n7{background:linear-gradient(135deg,#dc2626,#f87171)}
+.n8{background:linear-gradient(135deg,#0891b2,#22d3ee)}
+.n9{background:linear-gradient(135deg,#002060,#0047ff)}
+.sec-title{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;letter-spacing:-.5px;margin-bottom:10px}
+.sec-desc{font-size:1rem;color:var(--muted);max-width:760px;line-height:1.75}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:0 2px 10px rgba(15,23,42,.04)}
+
+/* CARD GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.grid .c-name{font-weight:800;margin-bottom:8px;font-size:.96rem}
+.grid p:not(.c-name){color:var(--muted);font-size:.88rem;line-height:1.6}
+
+/* CALLOUTS */
+.note-callout{background:var(--indigo-lt);border:1px solid #c7d2fe;border-radius:14px;padding:16px 20px;margin-bottom:24px}
+.note-callout p{color:var(--indigo-dk);font-size:.92rem;line-height:1.7}
+.warn-callout{background:var(--amber-lt);border:1px solid #fcd34d;border-radius:16px;padding:20px 24px;margin-top:20px}
+.warn-callout p{color:#78350f;line-height:1.7;font-size:.93rem}
+
+/* IMAGE CARD + PLACEHOLDER */
+.img-card{position:relative;border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(15,23,42,.12);cursor:zoom-in}
+.img-card img{display:block;width:100%;height:auto}
+.img-card .img-missing-caption{display:none}
+.img-card.img-missing{border:2px dashed var(--border);background:var(--indigo-lt);min-height:220px;display:flex;align-items:center;justify-content:center;box-shadow:none;cursor:default}
+.img-card.img-missing img{display:none}
+.img-card.img-missing .img-missing-caption{display:block;color:var(--muted);font-size:.85rem;text-align:center;padding:24px;max-width:340px}
+
+/* VIZ CARD (iframe) */
+.viz{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.07)}
+.viz-bar{display:flex;align-items:center;gap:10px;padding:9px 14px;background:#f8fafc;border-bottom:1px solid var(--border)}
+.dots{display:flex;gap:5px}
+.dot{width:10px;height:10px;border-radius:50%}
+.dr{background:#ff5f57}.dy{background:#febb2c}.dg{background:#27c840}
+.viz-lbl{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);flex:1}
+.viz-fs{display:flex;align-items:center;gap:5px;padding:4px 10px;background:transparent;border:1px solid var(--border);border-radius:6px;font-size:.71rem;font-weight:600;color:var(--muted);cursor:pointer;transition:background .2s,color .2s,border-color .2s;white-space:nowrap}
+.viz-fs:hover{background:var(--indigo-lt);color:var(--indigo);border-color:#c7d2fe}
+.viz iframe{width:100%;border:none;display:block}
+
+/* PROMPT BOX */
+.prompt-box{background:#0f172a;border-radius:14px;overflow:hidden;margin-bottom:18px}
+.prompt-head{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#1e293b;color:#e2e8f0;font-size:.82rem;font-weight:700}
+.copy-btn{padding:5px 12px;border-radius:8px;border:1px solid #475569;background:transparent;color:#e2e8f0;font-size:.76rem;font-weight:700;cursor:pointer;transition:background .2s}
+.copy-btn:hover{background:#334155}
+.prompt-box pre{margin:0;padding:18px 16px;color:#e2e8f0;font-size:.82rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;word-break:break-word}
+
+/* LIGHTBOX */
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.92);z-index:2000;display:flex;align-items:center;justify-content:center;padding:32px;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:auto}
+.overlay img{max-width:100%;max-height:100%;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.overlay-close{position:absolute;top:18px;right:22px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2}
+.overlay-close:hover{background:rgba(255,255,255,.22)}
+.overlay-download{position:absolute;top:18px;right:72px;height:40px;padding:0 16px;border-radius:20px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;text-decoration:none;z-index:2}
+.overlay-download:hover{background:rgba(255,255,255,.22)}
+
+/* FULLSCREEN IFRAME OVERLAY */
+#fs-overlay{position:fixed;inset:0;background:rgba(2,6,23,.94);z-index:2100;display:none;flex-direction:column}
+#fs-overlay.open{display:flex}
+#fs-bar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:rgba(0,0,0,.4);border-bottom:1px solid rgba(255,255,255,.08)}
+#fs-title{font-size:.8rem;font-weight:700;color:rgba(255,255,255,.65);flex:1}
+#fs-close{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.8);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#fs-close:hover{background:rgba(255,255,255,.2)}
+#fs-frame{flex:1;border:none;background:#fff}
+
+/* CHECKLIST */
+.checklist-progress-bar{height:10px;border-radius:100px;background:var(--indigo-lt);overflow:hidden;margin-bottom:20px}
+.checklist-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--indigo),var(--cyan));border-radius:100px;transition:width .3s ease}
+.checklist-items{list-style:none;display:flex;flex-direction:column;gap:12px}
+.checklist-items label{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:.95rem}
+.checklist-items input{width:18px;height:18px;accent-color:var(--indigo);cursor:pointer;flex-shrink:0}
+.checklist-done{margin-top:18px;padding:12px 16px;background:var(--green-lt);color:var(--green);border-radius:10px;font-weight:700}
+
+/* QUIZ */
+.quiz{display:flex;flex-direction:column;gap:18px}
+.quiz-question{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px}
+.quiz-text{font-weight:700;margin-bottom:12px}
+.quiz-options{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.quiz-options label{display:flex;align-items:center;gap:8px;font-size:.92rem;cursor:pointer}
+.quiz-options label.quiz-correct-answer{color:var(--green);font-weight:700}
+.quiz-options input{accent-color:var(--indigo)}
+.quiz-check{padding:8px 16px;border-radius:9px;border:none;background:var(--indigo);color:#fff;font-weight:700;font-size:.82rem;cursor:pointer}
+.quiz-check:hover{background:var(--indigo-dk)}
+.quiz-feedback{margin-top:12px;padding:10px 14px;border-radius:8px;font-size:.9rem}
+.quiz-feedback.correct{background:var(--green-lt);color:var(--green)}
+.quiz-feedback.incorrect{background:var(--red-lt);color:var(--red)}
+.quiz-score-box{text-align:center;font-weight:800;color:var(--indigo-dk)}
+
+/* CONCLUSION */
+.conclusion-list{list-style:none;counter-reset:concl;display:flex;flex-direction:column;gap:14px;margin-bottom:28px}
+.conclusion-list li{counter-increment:concl;padding-left:38px;position:relative;font-size:1rem}
+.conclusion-list li::before{content:counter(concl);position:absolute;left:0;top:-2px;width:26px;height:26px;border-radius:50%;background:var(--indigo);color:#fff;font-size:.8rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+
+.svc-link{color:var(--indigo);font-weight:700;text-decoration:underline;text-underline-offset:2px}
+
+/* SCROLL REVEAL */
+.fade{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease}
+.fade.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.fade{opacity:1;transform:none;transition:none}}
+@media (max-width:900px){.sec{padding:56px 18px}}
+
+footer{text-align:center;padding:32px 20px 48px;color:var(--muted);font-size:.85rem}
+/* Дополнения к шаблону vebinar-longrid в палитре проекта. */
+:root{--nav-h:62px}body{background:#fff;font-size:18px;font-family:Inter,'Golos Text',Montserrat,'Segoe UI',system-ui,sans-serif}h1,h2,h3{color:var(--indigo-dk)}
+html{scroll-padding-top:80px}.sec{padding:42px 24px;max-width:1200px}.sec>*+*{margin-top:18px}
+#hero{min-height:0;text-align:left;align-items:flex-start;max-width:1200px;margin:auto;padding:110px 24px 36px}
+.hero-title{max-width:1000px}.hero-sub{max-width:880px}.hero-nav{justify-content:flex-start}.hero-img{max-width:100%}
+.num-badge{background:var(--indigo-dk)}.sec-desc{max-width:1000px;color:#36445b}.time-chip{display:inline-block;font-size:15px;background:#e5efff;color:#002060;border-radius:30px;padding:5px 12px;vertical-align:middle}
+.card p,.grid p:not(.c-name){font-size:17px;color:#26354a}.grid .c-name{font-size:19px}.card li{margin-left:20px}
+.fine-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:14px}table{border-collapse:collapse;width:100%;min-width:580px}th,td{padding:12px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top;font-size:17px}th{background:#e5efff;color:#002060}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;font:16px/1.65 'Segoe UI',sans-serif}pre.source{padding:22px;background:#f5f8ff;border-left:4px solid var(--indigo)}
+.prompt-box pre{font-size:17px}.prompt-head{font-size:17px;gap:12px}.copy-btn{font-size:15px;min-height:40px;flex-shrink:0}
+details{background:#fff;border:1px solid #ccd8e8;border-radius:14px}summary{cursor:pointer;padding:18px;font-weight:700;color:#002060}details>.inside{padding:0 20px 22px}details pre{margin:12px 0}.details-key{border-color:#9cbbfa}.ready{border-color:#d6b060}
+.steps{padding:0 0 0 26px}.steps li{margin:12px 0}.rule-card{border-left:5px solid #b42318;background:#fff2f0;padding:20px;border-radius:12px}.bridge{color:#465973;border-left:3px solid #0047ff;padding:10px 20px}
+.dl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.dl{padding:18px;border:1px solid #bdd0ee;border-radius:12px;color:#002060;background:#f6f9ff;text-decoration:none;overflow-wrap:anywhere}.dl:hover{background:#e5efff}
+button.action{border:0;background:#0047ff;color:white;border-radius:9px;padding:12px 18px;font:700 16px 'Segoe UI',sans-serif;cursor:pointer;margin:8px 8px 8px 0}button.secondary{background:#e5efff;color:#002060}
+textarea,select,input[type=number],input[type=text]{font:inherit;border:1px solid #a3b5ce;border-radius:8px;padding:10px;max-width:100%;background:white;color:#152c4d}textarea{width:100%;min-height:90px}label.field{display:block;margin:12px 0}label.field span{display:block;font-weight:700;margin-bottom:5px}
+.result{padding:16px;border-radius:12px;background:#e5efff;border-left:4px solid #0047ff;margin-top:12px}.result:empty{display:none}.exercise{padding:24px;border:2px solid #abc7ff;border-radius:16px}.exercise h3{margin-bottom:10px}.exercise p{margin:10px 0}.checklist-items input{min-width:20px;min-height:20px}
+.img-card{box-shadow:none;border:1px solid #ccd8e8;margin-top:22px}.img-card.img-missing{min-height:150px}.img-card.img-missing .img-missing-caption{max-width:none;text-align:left;font-size:17px}.img-card:not(.img-missing){cursor:zoom-in}.caption{padding:12px 18px;color:#465973;font-size:15px}
+.quiz-question{margin:14px 0}.quiz-options label{font-size:17px}.quiz-text{font-size:18px}.quiz-feedback{font-size:17px}.source-links li{margin:10px 0}.source-links a{overflow-wrap:anywhere}
+.page-foot{background:#002060;color:#fff;text-align:left;padding:30px;margin-top:40px}.page-foot strong{color:#fff}.lightbox-native{padding:24px;max-width:96vw;border:0;border-radius:16px;background:#002060;color:white;margin:auto}.lightbox-native::backdrop{background:#00132fe8}.lightbox-native img{display:block;max-width:90vw;max-height:78vh}.lightbox-native button,.lightbox-native a{display:inline-block;margin:5px;color:#002060;background:white;padding:9px;border-radius:6px}
+.readable{max-width:1000px;margin:auto;padding:110px 24px 50px}.readable p{margin:16px 0}.readable h2{margin-top:36px}.readable h3{margin-top:24px}.readable li{margin:8px 0 8px 22px}.readable hr{margin:24px 0;border:0;border-top:1px solid #ccc}
+[hidden]{display:none!important}noscript{display:block;background:#fff3cd;padding:20px}.fade{opacity:1;transform:none}.bar{height:10px;background:#e5efff;border-radius:10px;margin:12px 0}.bar>span{display:block;height:10px;background:#0047ff;border-radius:10px;width:0}
+@media(max-width:640px){.sec{padding:30px 16px}#hero{padding:92px 16px 26px}.hero-title{letter-spacing:-.6px}.exercise{padding:16px}.prompt-head{flex-wrap:wrap}body{font-size:17px}.time-chip{margin-top:8px}.card{padding:18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+@media print{nav.top,button,.img-missing{display:none!important}#hero,.readable{padding-top:15px}.sec{padding:20px 0}details>.inside{display:block}.prompt-box{background:white}.prompt-box pre{color:black}}
+.result{color:#002060!important;white-space:pre-line}.exercise label{display:block;margin:12px 0}.demo-route{padding:20px;background:#e5efff;border-left:4px solid #0047ff;margin:20px 0}.template-search{width:100%;padding:14px;border:1px solid #aac3f0;border-radius:10px}.task-card[hidden]{display:none}
+</style></head><body><nav class="top"><a class="nav-link" href="#s1">Маршрут</a><a class="nav-link" href="#s2">Сервисы</a><a class="nav-link" href="#s3">Записка и отчёт</a><a class="nav-link" href="#s4">Форматы и кейсы</a><a class="nav-link" href="#homework">20 шаблонов</a></nav><header id="hero"><h1 class="hero-title">Управляем качеством <em>промпта</em></h1><p class="hero-sub">90 минут · четыре сервиса в обзоре · пять рабочих ситуаций · 20 универсальных шаблонов</p></header><main><section class="sec" id="s1"><h2>Маршрут занятия · 0–5 минут</h2><figure class="img-card" data-lightbox tabindex="0" role="button" aria-label="Увеличить слайд 0: Две практики работы с запросами"><img src="../assets/praktikum_7_8/slides/slide-00.png" alt="Две практики работы с запросами" loading="lazy" onerror="this.closest('figure').classList.add('img-missing')"><figcaption class="img-missing-caption"><b>Слайд 00 · Две практики работы с запросами</b><br>Место для инфографики. Файл: slide-00.png</figcaption></figure><p class="caption"><b>Пояснение.</b> Улучшаем постановку задачи и меняем форму ответа, сохраняя факты.</p><p>Все исходники вымышлены и не являются документами Концерна. Основные сравнения: Алиса AI, GigaChat и ChatGPT. DeepSeek — четвёртый сервис обзора и пример настройки.</p><div class="fine-table-wrap"><table><thead><tr><th>Минуты</th><th>Что делаем</th></tr></thead><tbody><tr><td>0–5</td><td>Цель занятия</td></tr><tr><td>5–15</td><td>Четыре сервиса · настройка DeepSeek</td></tr><tr><td>15–35</td><td>Записка о принтере · три сервиса</td></tr><tr><td>35–45</td><td>Резюме отчёта</td></tr><tr><td>45–60</td><td>Новый порядок заявок · три формата</td></tr><tr><td>60–73</td><td>Две редакции порядка</td></tr><tr><td>73–85</td><td>График по неделям</td></tr><tr><td>85–90</td><td>Итог и 20 шаблонов</td></tr></tbody></table></div><div class="dl-grid"><a class="dl" href="../data/praktikum_5_6_materialy.zip" download>Полный комплект</a></div><div class="card"><p><b>Иллюстрация: Маршрут занятия.</b> Будет добавлена после генерации. Сейчас используйте пояснения и интерактив этого блока.</p></div></section><section class="sec" id="s2"><h2>Четыре сервиса и настройка · 5–15 минут</h2><p><b>5–7:</b> знакомимся с сервисами. <b>7–13:</b> ведущий показывает органы управления DeepSeek. <b>13–15:</b> задаём стиль ответа и готовим чаты.</p><div class="grid"><div class="card"><h3><a href="https://ya.ru/ai/" target="_blank" rel="noopener">Алиса AI</a></h3><p>Основной сервис сравнения. Находим новый чат, поле запроса, историю и профиль; доступные режимы проверяем в открытом аккаунте.</p></div><div class="card"><h3><a href="https://giga.chat/" target="_blank" rel="noopener">GigaChat</a></h3><p>Основной сервис сравнения. Находим новый чат, поле запроса, историю и профиль; доступные режимы проверяем в открытом аккаунте.</p></div><div class="card"><h3><a href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT</a></h3><p>Основной сервис сравнения. Находим новый чат, поле запроса, историю и профиль; доступные режимы проверяем в открытом аккаунте.</p></div><div class="card"><h3><a href="https://chat.deepseek.com/" target="_blank" rel="noopener">DeepSeek</a></h3><p>Пример первичной настройки. Находим новый чат, поле запроса, историю и профиль; доступные режимы проверяем в открытом аккаунте.</p></div></div><div class="exercise"><h3>Схема органов управления DeepSeek</h3><p>Это учебная схема, а не снимок текущего интерфейса. Нажмите элемент, прочитайте назначение и найдите его в живом сервисе.</p><div class="grid"><button class="action secondary" data-control="Начинает отдельный диалог. Для каждого сравниваемого запроса открывайте новый чат.">Новый чат</button><button class="action secondary" data-control="Позволяет вернуться к диалогам. Перед показом уберите личную переписку с экрана. Удаление чата не гарантирует немедленного удаления всех данных сервиса.">История</button><button class="action secondary" data-control="Вставьте запрос с исходником. Если доступно вложение, прикрепите учебный файл и проверьте, что он прочитан. Альтернатива — TXT и вставка текста.">Поле запроса и файл</button><button class="action secondary" data-control="Найдите доступный переключатель режима. Запишите название и сохраняйте режим между слабым и улучшенным запросами. Названия и состав режимов меняются.">Режим ответа</button><button class="action secondary" data-control="Для задания по приложенному документу внешний поиск не нужен. Если переключатель доступен, отключите его.">Поиск</button><button class="action secondary" data-control="Найдите доступные настройки отображения, истории и данных. Показывайте реально видимые пункты. Не обещайте наличие памяти или отдельного раздела персонализации.">Профиль и настройки</button></div><p class="result" id="control-result" role="status">Начните с кнопки «Новый чат».</p></div><h3>Первичная настройка и персонализация</h3><ol class="steps"><li>Откройте официальный сайт DeepSeek; войдите до показа, не демонстрируя пароль.</li><li>Создайте учебный чат; при наличии настройки выберите удобную тему оформления.</li><li>Найдите режим ответа и поиск. Используйте исходник без внешнего поиска; запишите активный режим.</li><li>Откройте меню профиля и доступные настройки истории и данных. Покажите их назначение.</li><li>Задайте стиль вводной инструкцией ниже. Она действует как инструкция диалога и не создаёт автоматически постоянную память аккаунта.</li></ol><div class="prompt-box"><div class="prompt-head"><span>Инструкция для учебного диалога</span><button class="copy-btn" data-copy="personalization">Копировать</button></div><pre id="personalization">Отвечай на русском, ясно и по делу. Используй только приложенные учебные данные. Не придумывай сведения. Различай факт, предложение и вопрос. Соблюдай формат и объём задания. Если данных недостаточно, укажи, каких именно.</pre></div><p>Для сравнения добавляйте одинаковую вводную инструкцию во все три сервиса либо не используйте её ни в одном. В готовых запросах урока основные требования уже включены.</p><details><summary>Конфиденциальность · официальный источник</summary><div class="inside"><p>Политика DeepSeek описывает сбор текста и файлов, использование данных для развития сервиса, управление историей и право отказаться от использования данных для обучения. Доступный способ проверяйте в аккаунте и политике; фраза «не запоминай» в чате не заменяет настройку данных. Здесь используем только синтетические файлы.</p><a href="https://cdn.deepseek.com/policies/en-US/deepseek-privacy-policy.html" target="_blank" rel="noopener">Политика DeepSeek · проверено 30.09.2026</a></div></details><div class="card"><p><b>Иллюстрация: Схема настройки DeepSeek.</b> Будет добавлена после генерации. Сейчас используйте пояснения и интерактив этого блока.</p></div></section><section class="sec" id="s3"><h2>Практикум 5 · Улучшение качества промпта · 15–45 минут</h2><h3>Служебная записка о замене принтера · 15–35 минут</h3><div class="dl-grid"><a class="dl" href="../data/cases/printer.docx" download>Исходник · DOCX</a><a class="dl" href="../data/cases/printer.txt" download>Исходник · TXT</a></div><div class="fine-table-wrap"><table><thead><tr><th>Минуты</th><th>Ведущий</th><th>Вы</th></tr></thead><tbody><tr><td>15–19</td><td>Показать справку и неизвестные сведения</td><td>Различите недоступность принтера и простой людей</td></tr><tr><td>19–23</td><td>Слабый запрос с исходником в три сервиса</td><td>Найдите добавление без основания или его отсутствие</td></tr><tr><td>23–27</td><td>Собрать пять полей</td><td>Предложите ограничение; при молчании — «не придумывать бюджет»</td></tr><tr><td>27–32</td><td>Улучшенный запрос в три новых чата</td><td>Сравните версии внутри каждого сервиса</td></tr><tr><td>32–35</td><td>Заполнить лист наблюдений</td><td>Назовите полезную правку</td></tr></tbody></table></div><details class=""><summary>Полный исходник</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Синтетическая справка</span><button class="copy-btn" data-copy="source-material">Копировать</button></div><pre id="source-material">СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Учебная справка: печать документов в административной группе
+
+## 1. Для чего собраны сведения
+В вымышленной административной группе работают 12 человек. Они готовят информационные письма, списки участников встреч и общедоступные памятки. Группа использует один общий чёрно-белый офисный принтер, условное обозначение П-01. Название изготовителя, серийный номер, сетевой адрес и место установки не задаются. Сотрудник должен подготовить руководителю проект записки о рассмотрении замены оборудования. Решение о закупке ещё не принято.
+
+## 2. Наблюдения за четыре учебные недели
+Неделя 1: 1400 страниц; два эпизода недоступности; суммарно 2 часа.
+Неделя 2: 1600 страниц; один эпизод; суммарно 3 часа.
+Неделя 3: 1500 страниц; два эпизода; суммарно 4 часа.
+Неделя 4: 1500 страниц; один эпизод; суммарно 2 часа.
+Всего: 6000 страниц, 6 эпизодов, 11 часов недоступности устройства. Это наблюдения по принтеру, а не суммарный простой работников. Неизвестно, сколько сотрудников ожидало печать в каждый момент. Перемножать 11 часов на 12 человек для расчёта потерь нельзя.
+
+## 3. Что уже предпринимали
+Дважды выполнялось стандартное обслуживание с привлечением условной службы поддержки. Стоимость двух работ составила 4200 и 3800 рублей. После обслуживания печать восстанавливалась, но позже появлялись новые остановки. В справке нет технического заключения о неремонтопригодности, установленной причине сбоев или предельном ресурсе. Возраст устройства сам по себе не приведён. Нельзя писать, что специалист уже признал принтер неисправным окончательно.
+
+## 4. Доступная альтернатива
+Во время части остановок материалы печатали на другом офисном устройстве. Оно обслуживает другую группу и не всегда свободно. Время ожидания и дополнительные расходы не измерялись. Утверждение о невозможности продолжать работу было бы преувеличением; при этом регулярные остановки действительно создают неудобства. Задача записки — показать наблюдения и запросить рассмотрение вариантов, а не объявить производственный риск.
+
+## 5. Предлагаемое направление решения
+Автор записки предлагает сравнить дальнейшее обслуживание и замену на подходящую офисную модель. Требования, которые можно вынести на уточнение: чёрно-белая печать, двусторонняя печать, ожидаемая месячная нагрузка. Закупочная цена, стоимость расходных материалов, срок поставки и порядок согласования отсутствуют. Бюджет и поставщик не выбраны. Обещать экономию или окупаемость до получения этих данных нельзя.
+
+## 6. Граница готового результата
+Получатель — руководитель административной группы без ФИО. В записке нужно привести факты, сформулировать просьбу рассмотреть решение и указать, какие сведения следует собрать. Не добавляйте номера договора, дату согласования, подписи или реквизиты. Все цифры этого документа учебные.</pre></div></div></details><div class="prompt-box"><div class="prompt-head"><span>Слабый запрос с исходником</span><button class="copy-btn" data-copy="weak-prompt">Копировать</button></div><pre id="weak-prompt">Напиши записку о замене принтера.
+
+СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Учебная справка: печать документов в административной группе
+
+## 1. Для чего собраны сведения
+В вымышленной административной группе работают 12 человек. Они готовят информационные письма, списки участников встреч и общедоступные памятки. Группа использует один общий чёрно-белый офисный принтер, условное обозначение П-01. Название изготовителя, серийный номер, сетевой адрес и место установки не задаются. Сотрудник должен подготовить руководителю проект записки о рассмотрении замены оборудования. Решение о закупке ещё не принято.
+
+## 2. Наблюдения за четыре учебные недели
+Неделя 1: 1400 страниц; два эпизода недоступности; суммарно 2 часа.
+Неделя 2: 1600 страниц; один эпизод; суммарно 3 часа.
+Неделя 3: 1500 страниц; два эпизода; суммарно 4 часа.
+Неделя 4: 1500 страниц; один эпизод; суммарно 2 часа.
+Всего: 6000 страниц, 6 эпизодов, 11 часов недоступности устройства. Это наблюдения по принтеру, а не суммарный простой работников. Неизвестно, сколько сотрудников ожидало печать в каждый момент. Перемножать 11 часов на 12 человек для расчёта потерь нельзя.
+
+## 3. Что уже предпринимали
+Дважды выполнялось стандартное обслуживание с привлечением условной службы поддержки. Стоимость двух работ составила 4200 и 3800 рублей. После обслуживания печать восстанавливалась, но позже появлялись новые остановки. В справке нет технического заключения о неремонтопригодности, установленной причине сбоев или предельном ресурсе. Возраст устройства сам по себе не приведён. Нельзя писать, что специалист уже признал принтер неисправным окончательно.
+
+## 4. Доступная альтернатива
+Во время части остановок материалы печатали на другом офисном устройстве. Оно обслуживает другую группу и не всегда свободно. Время ожидания и дополнительные расходы не измерялись. Утверждение о невозможности продолжать работу было бы преувеличением; при этом регулярные остановки действительно создают неудобства. Задача записки — показать наблюдения и запросить рассмотрение вариантов, а не объявить производственный риск.
+
+## 5. Предлагаемое направление решения
+Автор записки предлагает сравнить дальнейшее обслуживание и замену на подходящую офисную модель. Требования, которые можно вынести на уточнение: чёрно-белая печать, двусторонняя печать, ожидаемая месячная нагрузка. Закупочная цена, стоимость расходных материалов, срок поставки и порядок согласования отсутствуют. Бюджет и поставщик не выбраны. Обещать экономию или окупаемость до получения этих данных нельзя.
+
+## 6. Граница готового результата
+Получатель — руководитель административной группы без ФИО. В записке нужно привести факты, сформулировать просьбу рассмотреть решение и указать, какие сведения следует собрать. Не добавляйте номера договора, дату согласования, подписи или реквизиты. Все цифры этого документа учебные.</pre></div><figure class="img-card" data-lightbox tabindex="0" role="button" aria-label="Увеличить слайд 3: Пять элементов запроса"><img src="../assets/praktikum_7_8/slides/slide-03.png" alt="Пять элементов запроса" loading="lazy" onerror="this.closest('figure').classList.add('img-missing')"><figcaption class="img-missing-caption"><b>Слайд 03 · Пять элементов запроса</b><br>Место для инфографики. Файл: slide-03.png</figcaption></figure><p class="caption"><b>Пояснение.</b> Цель, контекст, роль, ограничения и формат делают просьбу проверяемой.</p><div class="exercise"><h3>Конструктор улучшенного запроса</h3><label class="field">Цель и задача<textarea id="field-0" data-default="Подготовь проект служебной записки с обоснованием рассмотрения замены офисного принтера">Подготовь проект служебной записки с обоснованием рассмотрения замены офисного принтера</textarea></label><label class="field">Контекст и источники<textarea id="field-1" data-default="Руководитель административной группы; только приложенная справка.">Руководитель административной группы; только приложенная справка.</textarea></label><label class="field">Роль<textarea id="field-2" data-default="редактор служебных записок">редактор служебных записок</textarea></label><label class="field">Ограничения и остановка<textarea id="field-3" data-default="Не придумывай бюджет, диагноз, поставщика и согласование. Недостающее вынеси в вопросы.">Не придумывай бюджет, диагноз, поставщика и согласование. Недостающее вынеси в вопросы.</textarea></label><label class="field">Результат и проверка<textarea id="field-4" data-default="До 180 слов: ситуация, подтверждённые факты, просьба рассмотреть варианты; отдельный список недостающих сведений Не объявлена согласованная покупка; 11 часов не названы простоем всего подразделения; нет выдуманного бюджета или диагноза.">До 180 слов: ситуация, подтверждённые факты, просьба рассмотреть варианты; отдельный список недостающих сведений Не объявлена согласованная покупка; 11 часов не названы простоем всего подразделения; нет выдуманного бюджета или диагноза.</textarea></label><button class="action" id="build-prompt">Собрать улучшенный запрос</button><button class="action secondary" id="reset-builder">Сбросить</button><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="built-prompt">Копировать</button></div><pre id="built-prompt">Заполните поля и нажмите «Собрать».</pre></div></div><details class=""><summary>Готовый улучшенный запрос</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="improved-prompt">Копировать</button></div><pre id="improved-prompt">ЦЕЛЬ И ЗАДАЧА: Подготовь проект служебной записки с обоснованием рассмотрения замены офисного принтера.
+КОНТЕКСТ И ИСТОЧНИКИ: только приложенный синтетический документ; адресат указан в формате.
+РОЛЬ: редактор служебных записок.
+ОГРАНИЧЕНИЯ: не придумывай сведения, причины, даты, цены, ответственных и согласования. Сохраняй исключения и статус проекта. Недостающее вынеси в вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: До 180 слов: ситуация, подтверждённые факты, просьба рассмотреть варианты; отдельный список недостающих сведений.
+КРИТЕРИЙ ПРОВЕРКИ: Не объявлена согласованная покупка; 11 часов не названы простоем всего подразделения; нет выдуманного бюджета или диагноза.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Учебная справка: печать документов в административной группе
+
+## 1. Для чего собраны сведения
+В вымышленной административной группе работают 12 человек. Они готовят информационные письма, списки участников встреч и общедоступные памятки. Группа использует один общий чёрно-белый офисный принтер, условное обозначение П-01. Название изготовителя, серийный номер, сетевой адрес и место установки не задаются. Сотрудник должен подготовить руководителю проект записки о рассмотрении замены оборудования. Решение о закупке ещё не принято.
+
+## 2. Наблюдения за четыре учебные недели
+Неделя 1: 1400 страниц; два эпизода недоступности; суммарно 2 часа.
+Неделя 2: 1600 страниц; один эпизод; суммарно 3 часа.
+Неделя 3: 1500 страниц; два эпизода; суммарно 4 часа.
+Неделя 4: 1500 страниц; один эпизод; суммарно 2 часа.
+Всего: 6000 страниц, 6 эпизодов, 11 часов недоступности устройства. Это наблюдения по принтеру, а не суммарный простой работников. Неизвестно, сколько сотрудников ожидало печать в каждый момент. Перемножать 11 часов на 12 человек для расчёта потерь нельзя.
+
+## 3. Что уже предпринимали
+Дважды выполнялось стандартное обслуживание с привлечением условной службы поддержки. Стоимость двух работ составила 4200 и 3800 рублей. После обслуживания печать восстанавливалась, но позже появлялись новые остановки. В справке нет технического заключения о неремонтопригодности, установленной причине сбоев или предельном ресурсе. Возраст устройства сам по себе не приведён. Нельзя писать, что специалист уже признал принтер неисправным окончательно.
+
+## 4. Доступная альтернатива
+Во время части остановок материалы печатали на другом офисном устройстве. Оно обслуживает другую группу и не всегда свободно. Время ожидания и дополнительные расходы не измерялись. Утверждение о невозможности продолжать работу было бы преувеличением; при этом регулярные остановки действительно создают неудобства. Задача записки — показать наблюдения и запросить рассмотрение вариантов, а не объявить производственный риск.
+
+## 5. Предлагаемое направление решения
+Автор записки предлагает сравнить дальнейшее обслуживание и замену на подходящую офисную модель. Требования, которые можно вынести на уточнение: чёрно-белая печать, двусторонняя печать, ожидаемая месячная нагрузка. Закупочная цена, стоимость расходных материалов, срок поставки и порядок согласования отсутствуют. Бюджет и поставщик не выбраны. Обещать экономию или окупаемость до получения этих данных нельзя.
+
+## 6. Граница готового результата
+Получатель — руководитель административной группы без ФИО. В записке нужно привести факты, сформулировать просьбу рассмотреть решение и указать, какие сведения следует собрать. Не добавляйте номера договора, дату согласования, подписи или реквизиты. Все цифры этого документа учебные.</pre></div></div></details><div class="exercise"><h3>Проверка ответа</h3><label><input type="checkbox" data-quality="q1">Опирается на наблюдения справки</label><label><input type="checkbox" data-quality="q2">Нет выдуманного бюджета и согласованной закупки</label><label><input type="checkbox" data-quality="q3">11 часов не названы простоем всех сотрудников</label><label><input type="checkbox" data-quality="q4">Есть просьба и вопросы по недостающим сведениям</label><button class="action" id="check-quality">Проверить сравнение</button><p id="quality-result" class="result" role="status"></p></div><p><a href="../data/sravnenie_3_servisov.docx" download>Лист наблюдений</a>. Недоступный сервис отмечаем «ответ не получен»; авторский пример не выдаём за ответ модели.</p><div class="card"><p><b>Иллюстрация: Записка: факты и неизвестное.</b> Будет добавлена после генерации. Сейчас используйте пояснения и интерактив этого блока.</p></div><article class="card" id="case-report"><h3>Краткое резюме отчёта для руководителя · 35–45 минут</h3><p><b>Показ ведущего и ваше действие.</b> Покажите просьбу «Сократи отчёт», затем задайте пять пунктов с основаниями. Разберите ответ в одном сервисе. Проверьте 12 + 48 − 45 = 15 и показатель 34 из 40. Не называйте 45/48 долей завершённых новых запросов.</p><div class="dl-grid"><a class="dl" href="../data/cases/report.docx" download>Исходник · DOCX</a><a class="dl" href="../data/cases/report.txt" download>Исходник · TXT</a></div><details class=""><summary>Полный синтетический исходник</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="report-source">Копировать</button></div><pre id="report-source">СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Отчёт вымышленной группы сопровождения за четыре недели
+
+## Р1. Назначение отчёта
+Группа сопровождает подготовку открытых информационных материалов: справок, памяток и презентаций. Отчёт нужен для короткого обсуждения с руководителем. Это не производственная отчётность. Показатели обезличены по замыслу учебного сценария; реальные фамилии, подразделения и заказчики отсутствуют. В отчёте отдельно учитываются поступление запросов, завершение работ и очередь. Эти величины относятся к разным событиям и не должны смешиваться.
+
+## Р2. Движение запросов
+На начало периода в работе было 12 запросов. За период поступило ещё 48. Завершено 45 запросов, включая часть начального остатка. На конец периода осталось 15: 9 требуют работы группы, 6 ожидают уточнения исходных сведений. Проверка баланса: 12 + 48 − 45 = 15. Показатель 45 нельзя делить на 48 и называть долей завершённых именно новых запросов: принадлежность завершённых работ к входящему потоку не раскрыта.
+
+## Р3. Распределение завершённых работ
+Из 45 завершённых работ: 18 кратких справок, 15 памяток, 12 комплектов тезисов. Сроки были согласованы для 40 работ; 34 выполнены в согласованный срок, 6 позднее. Для остальных 5 завершённых работ срок не фиксировался. Доля соблюдения срока среди работ с согласованным сроком составляет 34 из 40, то есть 85%. Вывод о 85% для всех 45 завершённых работ был бы некорректен.
+
+## Р4. Качество и повторная работа
+На содержательное уточнение возвращены 7 завершённых материалов. Из них 4 — из-за изменения запроса после начала подготовки, 2 — из-за опечаток, 1 — из-за отсутствия обязательного раздела. Категории не пересекаются. Возврат не означает, что документ полностью непригоден; объём переделки не измерялся. Нельзя утверждать, что все возвраты вызваны ошибками исполнителя.
+
+## Р5. Причины отклонений и ограничения
+Для 3 из 6 работ, выполненных позднее срока, в журнале указано позднее поступление исходных материалов. Для остальных 3 причина не зафиксирована. Дополнительная нагрузка в конце периода наблюдалась, но её связь с задержками не исследовалась. Сравнимых показателей прошлого месяца нет, поэтому нельзя заявлять рост производительности или ухудшение качества относительно прошлого периода.
+
+## Р6. Предложения группы
+Предложено при регистрации запросов уточнять цель, адресата, объём и срок; для повторяющихся материалов использовать согласованный шаблон; отдельно отмечать ожидание информации. Предложения не утверждены. Для обсуждения с руководителем нужно решить, стоит ли провести учебную пробу нового бланка запроса. Исполнитель, дата начала, бюджет и показатели эффекта пока не определены. В резюме их следует назвать открытыми вопросами.
+
+## Р7. Дополнительный контекст
+В периоде также обновили список общедоступных справочных материалов и провели короткую консультацию для новичков. Количество участников не фиксировалось. Эти события полезны как фон, но не подтверждают финансовый эффект или причину изменения сроков. Руководителю нужна краткая фактическая выжимка, а не пересказ каждого абзаца.</pre></div></div></details><details class=""><summary>Слабый запрос с исходником</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="report-weak">Копировать</button></div><pre id="report-weak">Сократи отчёт.
+
+СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Отчёт вымышленной группы сопровождения за четыре недели
+
+## Р1. Назначение отчёта
+Группа сопровождает подготовку открытых информационных материалов: справок, памяток и презентаций. Отчёт нужен для короткого обсуждения с руководителем. Это не производственная отчётность. Показатели обезличены по замыслу учебного сценария; реальные фамилии, подразделения и заказчики отсутствуют. В отчёте отдельно учитываются поступление запросов, завершение работ и очередь. Эти величины относятся к разным событиям и не должны смешиваться.
+
+## Р2. Движение запросов
+На начало периода в работе было 12 запросов. За период поступило ещё 48. Завершено 45 запросов, включая часть начального остатка. На конец периода осталось 15: 9 требуют работы группы, 6 ожидают уточнения исходных сведений. Проверка баланса: 12 + 48 − 45 = 15. Показатель 45 нельзя делить на 48 и называть долей завершённых именно новых запросов: принадлежность завершённых работ к входящему потоку не раскрыта.
+
+## Р3. Распределение завершённых работ
+Из 45 завершённых работ: 18 кратких справок, 15 памяток, 12 комплектов тезисов. Сроки были согласованы для 40 работ; 34 выполнены в согласованный срок, 6 позднее. Для остальных 5 завершённых работ срок не фиксировался. Доля соблюдения срока среди работ с согласованным сроком составляет 34 из 40, то есть 85%. Вывод о 85% для всех 45 завершённых работ был бы некорректен.
+
+## Р4. Качество и повторная работа
+На содержательное уточнение возвращены 7 завершённых материалов. Из них 4 — из-за изменения запроса после начала подготовки, 2 — из-за опечаток, 1 — из-за отсутствия обязательного раздела. Категории не пересекаются. Возврат не означает, что документ полностью непригоден; объём переделки не измерялся. Нельзя утверждать, что все возвраты вызваны ошибками исполнителя.
+
+## Р5. Причины отклонений и ограничения
+Для 3 из 6 работ, выполненных позднее срока, в журнале указано позднее поступление исходных материалов. Для остальных 3 причина не зафиксирована. Дополнительная нагрузка в конце периода наблюдалась, но её связь с задержками не исследовалась. Сравнимых показателей прошлого месяца нет, поэтому нельзя заявлять рост производительности или ухудшение качества относительно прошлого периода.
+
+## Р6. Предложения группы
+Предложено при регистрации запросов уточнять цель, адресата, объём и срок; для повторяющихся материалов использовать согласованный шаблон; отдельно отмечать ожидание информации. Предложения не утверждены. Для обсуждения с руководителем нужно решить, стоит ли провести учебную пробу нового бланка запроса. Исполнитель, дата начала, бюджет и показатели эффекта пока не определены. В резюме их следует назвать открытыми вопросами.
+
+## Р7. Дополнительный контекст
+В периоде также обновили список общедоступных справочных материалов и провели короткую консультацию для новичков. Количество участников не фиксировалось. Эти события полезны как фон, но не подтверждают финансовый эффект или причину изменения сроков. Руководителю нужна краткая фактическая выжимка, а не пересказ каждого абзаца.</pre></div></div></details><details class=""><summary>Структурированный запрос с исходником</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="report-prompt">Копировать</button></div><pre id="report-prompt">ЦЕЛЬ И ЗАДАЧА: Выдели главное из учебного отчёта для руководителя.
+КОНТЕКСТ И ИСТОЧНИКИ: только приложенный синтетический документ; адресат указан в формате.
+РОЛЬ: аналитик управленческой отчётности.
+ОГРАНИЧЕНИЯ: не придумывай сведения, причины, даты, цены, ответственных и согласования. Сохраняй исключения и статус проекта. Недостающее вынеси в вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Пять пунктов до 160 слов: результат, отклонения, подтверждённые причины, открытые вопросы, предложение для рассмотрения; указывай раздел-основание.
+КРИТЕРИЙ ПРОВЕРКИ: Не перепутаны входящий поток, завершение и остаток; предложения не названы решениями; нет недоказанной причинной связи.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Отчёт вымышленной группы сопровождения за четыре недели
+
+## Р1. Назначение отчёта
+Группа сопровождает подготовку открытых информационных материалов: справок, памяток и презентаций. Отчёт нужен для короткого обсуждения с руководителем. Это не производственная отчётность. Показатели обезличены по замыслу учебного сценария; реальные фамилии, подразделения и заказчики отсутствуют. В отчёте отдельно учитываются поступление запросов, завершение работ и очередь. Эти величины относятся к разным событиям и не должны смешиваться.
+
+## Р2. Движение запросов
+На начало периода в работе было 12 запросов. За период поступило ещё 48. Завершено 45 запросов, включая часть начального остатка. На конец периода осталось 15: 9 требуют работы группы, 6 ожидают уточнения исходных сведений. Проверка баланса: 12 + 48 − 45 = 15. Показатель 45 нельзя делить на 48 и называть долей завершённых именно новых запросов: принадлежность завершённых работ к входящему потоку не раскрыта.
+
+## Р3. Распределение завершённых работ
+Из 45 завершённых работ: 18 кратких справок, 15 памяток, 12 комплектов тезисов. Сроки были согласованы для 40 работ; 34 выполнены в согласованный срок, 6 позднее. Для остальных 5 завершённых работ срок не фиксировался. Доля соблюдения срока среди работ с согласованным сроком составляет 34 из 40, то есть 85%. Вывод о 85% для всех 45 завершённых работ был бы некорректен.
+
+## Р4. Качество и повторная работа
+На содержательное уточнение возвращены 7 завершённых материалов. Из них 4 — из-за изменения запроса после начала подготовки, 2 — из-за опечаток, 1 — из-за отсутствия обязательного раздела. Категории не пересекаются. Возврат не означает, что документ полностью непригоден; объём переделки не измерялся. Нельзя утверждать, что все возвраты вызваны ошибками исполнителя.
+
+## Р5. Причины отклонений и ограничения
+Для 3 из 6 работ, выполненных позднее срока, в журнале указано позднее поступление исходных материалов. Для остальных 3 причина не зафиксирована. Дополнительная нагрузка в конце периода наблюдалась, но её связь с задержками не исследовалась. Сравнимых показателей прошлого месяца нет, поэтому нельзя заявлять рост производительности или ухудшение качества относительно прошлого периода.
+
+## Р6. Предложения группы
+Предложено при регистрации запросов уточнять цель, адресата, объём и срок; для повторяющихся материалов использовать согласованный шаблон; отдельно отмечать ожидание информации. Предложения не утверждены. Для обсуждения с руководителем нужно решить, стоит ли провести учебную пробу нового бланка запроса. Исполнитель, дата начала, бюджет и показатели эффекта пока не определены. В резюме их следует назвать открытыми вопросами.
+
+## Р7. Дополнительный контекст
+В периоде также обновили список общедоступных справочных материалов и провели короткую консультацию для новичков. Количество участников не фиксировалось. Эти события полезны как фон, но не подтверждают финансовый эффект или причину изменения сроков. Руководителю нужна краткая фактическая выжимка, а не пересказ каждого абзаца.</pre></div></div></details><p><b>Критерий проверки:</b> Не перепутаны входящий поток, завершение и остаток; предложения не названы решениями; нет недоказанной причинной связи.</p></article><div class="card"><p><b>Иллюстрация: Отчёт: смысл показателей.</b> Будет добавлена после генерации. Сейчас используйте пояснения и интерактив этого блока.</p></div></section><section class="sec" id="s4"><h2>Практикум 6 · Одна задача — разные результаты · 45–85 минут</h2><h3>Новый порядок заявок · 45–60 минут</h3><div class="dl-grid"><a class="dl" href="../data/cases/requests.docx" download>Исходник · DOCX</a><a class="dl" href="../data/cases/requests.txt" download>Исходник · TXT</a></div><details class=""><summary>Полный исходник</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="requests-source">Копировать</button></div><pre id="requests-source">СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Учебная памятка: новый порядок заявок на офисное обслуживание
+
+## З1. Область применения
+В вымышленной организации вводится порядок обращений по офисному оборудованию: принтерам, сканерам и рабочим мониторам. Порядок не относится к производственному оборудованию, программам станков, технологическим процессам или аварийным работам. Новая процедура в рамках учебного сценария начинается с недели 2. Реальной календарной даты, ссылки на форму и контактов в материале нет.
+
+## З2. Как было и как становится
+Ранее обычные новые обращения отправляли отдельными письмами в условную службу поддержки. Начиная с недели 2, новые обычные заявки регистрируют в единой форме «Офисная заявка». Это учебное название, не существующая корпоративная система. Переписка по уже зарегистрированным обращениям продолжается в их карточках; подавать их заново не требуется. Не нужно превращать изменение канала новых заявок в требование переподать весь накопленный список.
+
+## З3. Что указать в новой заявке
+Обязательные поля: категория оборудования, понятное описание симптома, момент первого обнаружения в обобщённом виде, действия пользователя до обращения и влияние на выполнение офисной задачи. Для занятия используется условный идентификатор устройства, например ОФ-01. Время появления симптома можно описывать как «после включения» или «при печати»; реальные сетевые адреса и точное расположение устройства в учебную форму не вводятся. Пароли и содержимое рабочих документов не прикладываются.
+
+## З4. Что происходит после отправки
+Координатор проверяет полноту обычной заявки в течение двух рабочих дней. Если сведений недостаточно, запрашивает уточнение. Этот срок относится только к первичной проверке и не означает, что неисправность будет устранена за два дня. Исполнитель и срок выполнения определяются отдельно после оценки обращения. Нельзя обещать гарантированный ремонт, бесплатную замену или автоматическое согласование закупки.
+
+## З5. Исключение для опасной ситуации
+Если наблюдаются признаки опасности, например запах гари или видимое повреждение питания, обычная очередь заявок не используется как единственный способ реагирования. Работу прекращают и действуют по утверждённым внутренним правилам организации, связываясь с ответственными лицами установленным способом. Конкретная инструкция, контакт и технические действия в учебном тексте не приведены. Не придумывайте порядок ремонта и не предлагайте самостоятельно вскрывать оборудование.
+
+## З6. Подтверждение и статус
+После регистрации нужно сохранить идентификатор заявки. При уточнении информации указывать этот идентификатор. В учебном сценарии статусы: «зарегистрирована», «нужны сведения», «в работе», «завершена». Статус «зарегистрирована» означает, что обращение получено, а не что проблема решена. Срока автоматического перехода между статусами нет.
+
+## З7. Что следует уточнить до реального сообщения
+Организатор должен сообщить календарную дату перехода, адрес формы, канал связи по опасным ситуациям и контакт для вопросов о новом порядке. До получения этих сведений текст для рассылки является проектом. Руководителю важны изменение процесса и открытые вопросы; новичку — простое объяснение; исполнителю — последовательность действий с сохранением исключения З5.
+
+## З8. Задача на занятии
+Сформируйте три разных представления одной памятки. Не меняйте факты для удобства текста. Сокращение не должно убирать условие о текущих заявках, различие между проверкой и выполнением или исключение для опасной ситуации. Все названия, сроки и обстоятельства в этом файле вымышлены.</pre></div></div></details><p><b>45–48:</b> ключевые условия. <b>48–55:</b> три формата в одном сервисе; затем один формат, например чек-лист, в двух остальных. <b>55–60:</b> сравнение и интерактив. Все три версии строятся на одном исходнике.</p><details class=""><summary>Для новичка</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="format-1">Копировать</button></div><pre id="format-1">ЦЕЛЬ И ЗАДАЧА: Представь один учебный порядок для выбранного адресата, сохранив все существенные условия.
+КОНТЕКСТ И ИСТОЧНИКИ: только приложенный синтетический документ; адресат указан в формате.
+РОЛЬ: редактор внутренней коммуникации.
+ОГРАНИЧЕНИЯ: не придумывай сведения, причины, даты, цены, ответственных и согласования. Сохраняй исключения и статус проекта. Недостающее вынеси в вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Объяснение до 140 слов и вопросы о переходе.
+КРИТЕРИЙ ПРОВЕРКИ: Новые заявки через форму; текущие повторно не подаются; срочная ситуация не обходится обычной очередью; 2 дня — первичная проверка, не ремонт.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Учебная памятка: новый порядок заявок на офисное обслуживание
+
+## З1. Область применения
+В вымышленной организации вводится порядок обращений по офисному оборудованию: принтерам, сканерам и рабочим мониторам. Порядок не относится к производственному оборудованию, программам станков, технологическим процессам или аварийным работам. Новая процедура в рамках учебного сценария начинается с недели 2. Реальной календарной даты, ссылки на форму и контактов в материале нет.
+
+## З2. Как было и как становится
+Ранее обычные новые обращения отправляли отдельными письмами в условную службу поддержки. Начиная с недели 2, новые обычные заявки регистрируют в единой форме «Офисная заявка». Это учебное название, не существующая корпоративная система. Переписка по уже зарегистрированным обращениям продолжается в их карточках; подавать их заново не требуется. Не нужно превращать изменение канала новых заявок в требование переподать весь накопленный список.
+
+## З3. Что указать в новой заявке
+Обязательные поля: категория оборудования, понятное описание симптома, момент первого обнаружения в обобщённом виде, действия пользователя до обращения и влияние на выполнение офисной задачи. Для занятия используется условный идентификатор устройства, например ОФ-01. Время появления симптома можно описывать как «после включения» или «при печати»; реальные сетевые адреса и точное расположение устройства в учебную форму не вводятся. Пароли и содержимое рабочих документов не прикладываются.
+
+## З4. Что происходит после отправки
+Координатор проверяет полноту обычной заявки в течение двух рабочих дней. Если сведений недостаточно, запрашивает уточнение. Этот срок относится только к первичной проверке и не означает, что неисправность будет устранена за два дня. Исполнитель и срок выполнения определяются отдельно после оценки обращения. Нельзя обещать гарантированный ремонт, бесплатную замену или автоматическое согласование закупки.
+
+## З5. Исключение для опасной ситуации
+Если наблюдаются признаки опасности, например запах гари или видимое повреждение питания, обычная очередь заявок не используется как единственный способ реагирования. Работу прекращают и действуют по утверждённым внутренним правилам организации, связываясь с ответственными лицами установленным способом. Конкретная инструкция, контакт и технические действия в учебном тексте не приведены. Не придумывайте порядок ремонта и не предлагайте самостоятельно вскрывать оборудование.
+
+## З6. Подтверждение и статус
+После регистрации нужно сохранить идентификатор заявки. При уточнении информации указывать этот идентификатор. В учебном сценарии статусы: «зарегистрирована», «нужны сведения», «в работе», «завершена». Статус «зарегистрирована» означает, что обращение получено, а не что проблема решена. Срока автоматического перехода между статусами нет.
+
+## З7. Что следует уточнить до реального сообщения
+Организатор должен сообщить календарную дату перехода, адрес формы, канал связи по опасным ситуациям и контакт для вопросов о новом порядке. До получения этих сведений текст для рассылки является проектом. Руководителю важны изменение процесса и открытые вопросы; новичку — простое объяснение; исполнителю — последовательность действий с сохранением исключения З5.
+
+## З8. Задача на занятии
+Сформируйте три разных представления одной памятки. Не меняйте факты для удобства текста. Сокращение не должно убирать условие о текущих заявках, различие между проверкой и выполнением или исключение для опасной ситуации. Все названия, сроки и обстоятельства в этом файле вымышлены.</pre></div></div></details><details class=""><summary>Для руководителя</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="format-2">Копировать</button></div><pre id="format-2">ЦЕЛЬ И ЗАДАЧА: Представь один учебный порядок для выбранного адресата, сохранив все существенные условия.
+КОНТЕКСТ И ИСТОЧНИКИ: только приложенный синтетический документ; адресат указан в формате.
+РОЛЬ: редактор внутренней коммуникации.
+ОГРАНИЧЕНИЯ: не придумывай сведения, причины, даты, цены, ответственных и согласования. Сохраняй исключения и статус проекта. Недостающее вынеси в вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Записка до 90 слов: изменение, границы, что уточнить.
+КРИТЕРИЙ ПРОВЕРКИ: Новые заявки через форму; текущие повторно не подаются; срочная ситуация не обходится обычной очередью; 2 дня — первичная проверка, не ремонт.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Учебная памятка: новый порядок заявок на офисное обслуживание
+
+## З1. Область применения
+В вымышленной организации вводится порядок обращений по офисному оборудованию: принтерам, сканерам и рабочим мониторам. Порядок не относится к производственному оборудованию, программам станков, технологическим процессам или аварийным работам. Новая процедура в рамках учебного сценария начинается с недели 2. Реальной календарной даты, ссылки на форму и контактов в материале нет.
+
+## З2. Как было и как становится
+Ранее обычные новые обращения отправляли отдельными письмами в условную службу поддержки. Начиная с недели 2, новые обычные заявки регистрируют в единой форме «Офисная заявка». Это учебное название, не существующая корпоративная система. Переписка по уже зарегистрированным обращениям продолжается в их карточках; подавать их заново не требуется. Не нужно превращать изменение канала новых заявок в требование переподать весь накопленный список.
+
+## З3. Что указать в новой заявке
+Обязательные поля: категория оборудования, понятное описание симптома, момент первого обнаружения в обобщённом виде, действия пользователя до обращения и влияние на выполнение офисной задачи. Для занятия используется условный идентификатор устройства, например ОФ-01. Время появления симптома можно описывать как «после включения» или «при печати»; реальные сетевые адреса и точное расположение устройства в учебную форму не вводятся. Пароли и содержимое рабочих документов не прикладываются.
+
+## З4. Что происходит после отправки
+Координатор проверяет полноту обычной заявки в течение двух рабочих дней. Если сведений недостаточно, запрашивает уточнение. Этот срок относится только к первичной проверке и не означает, что неисправность будет устранена за два дня. Исполнитель и срок выполнения определяются отдельно после оценки обращения. Нельзя обещать гарантированный ремонт, бесплатную замену или автоматическое согласование закупки.
+
+## З5. Исключение для опасной ситуации
+Если наблюдаются признаки опасности, например запах гари или видимое повреждение питания, обычная очередь заявок не используется как единственный способ реагирования. Работу прекращают и действуют по утверждённым внутренним правилам организации, связываясь с ответственными лицами установленным способом. Конкретная инструкция, контакт и технические действия в учебном тексте не приведены. Не придумывайте порядок ремонта и не предлагайте самостоятельно вскрывать оборудование.
+
+## З6. Подтверждение и статус
+После регистрации нужно сохранить идентификатор заявки. При уточнении информации указывать этот идентификатор. В учебном сценарии статусы: «зарегистрирована», «нужны сведения», «в работе», «завершена». Статус «зарегистрирована» означает, что обращение получено, а не что проблема решена. Срока автоматического перехода между статусами нет.
+
+## З7. Что следует уточнить до реального сообщения
+Организатор должен сообщить календарную дату перехода, адрес формы, канал связи по опасным ситуациям и контакт для вопросов о новом порядке. До получения этих сведений текст для рассылки является проектом. Руководителю важны изменение процесса и открытые вопросы; новичку — простое объяснение; исполнителю — последовательность действий с сохранением исключения З5.
+
+## З8. Задача на занятии
+Сформируйте три разных представления одной памятки. Не меняйте факты для удобства текста. Сокращение не должно убирать условие о текущих заявках, различие между проверкой и выполнением или исключение для опасной ситуации. Все названия, сроки и обстоятельства в этом файле вымышлены.</pre></div></div></details><details class=""><summary>Для исполнителя</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="format-3">Копировать</button></div><pre id="format-3">ЦЕЛЬ И ЗАДАЧА: Представь один учебный порядок для выбранного адресата, сохранив все существенные условия.
+КОНТЕКСТ И ИСТОЧНИКИ: только приложенный синтетический документ; адресат указан в формате.
+РОЛЬ: редактор внутренней коммуникации.
+ОГРАНИЧЕНИЯ: не придумывай сведения, причины, даты, цены, ответственных и согласования. Сохраняй исключения и статус проекта. Недостающее вынеси в вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Чек-лист 6–8 действий: новые и текущие заявки, проверка полноты, опасная ситуация, вопросы.
+КРИТЕРИЙ ПРОВЕРКИ: Новые заявки через форму; текущие повторно не подаются; срочная ситуация не обходится обычной очередью; 2 дня — первичная проверка, не ремонт.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Учебная памятка: новый порядок заявок на офисное обслуживание
+
+## З1. Область применения
+В вымышленной организации вводится порядок обращений по офисному оборудованию: принтерам, сканерам и рабочим мониторам. Порядок не относится к производственному оборудованию, программам станков, технологическим процессам или аварийным работам. Новая процедура в рамках учебного сценария начинается с недели 2. Реальной календарной даты, ссылки на форму и контактов в материале нет.
+
+## З2. Как было и как становится
+Ранее обычные новые обращения отправляли отдельными письмами в условную службу поддержки. Начиная с недели 2, новые обычные заявки регистрируют в единой форме «Офисная заявка». Это учебное название, не существующая корпоративная система. Переписка по уже зарегистрированным обращениям продолжается в их карточках; подавать их заново не требуется. Не нужно превращать изменение канала новых заявок в требование переподать весь накопленный список.
+
+## З3. Что указать в новой заявке
+Обязательные поля: категория оборудования, понятное описание симптома, момент первого обнаружения в обобщённом виде, действия пользователя до обращения и влияние на выполнение офисной задачи. Для занятия используется условный идентификатор устройства, например ОФ-01. Время появления симптома можно описывать как «после включения» или «при печати»; реальные сетевые адреса и точное расположение устройства в учебную форму не вводятся. Пароли и содержимое рабочих документов не прикладываются.
+
+## З4. Что происходит после отправки
+Координатор проверяет полноту обычной заявки в течение двух рабочих дней. Если сведений недостаточно, запрашивает уточнение. Этот срок относится только к первичной проверке и не означает, что неисправность будет устранена за два дня. Исполнитель и срок выполнения определяются отдельно после оценки обращения. Нельзя обещать гарантированный ремонт, бесплатную замену или автоматическое согласование закупки.
+
+## З5. Исключение для опасной ситуации
+Если наблюдаются признаки опасности, например запах гари или видимое повреждение питания, обычная очередь заявок не используется как единственный способ реагирования. Работу прекращают и действуют по утверждённым внутренним правилам организации, связываясь с ответственными лицами установленным способом. Конкретная инструкция, контакт и технические действия в учебном тексте не приведены. Не придумывайте порядок ремонта и не предлагайте самостоятельно вскрывать оборудование.
+
+## З6. Подтверждение и статус
+После регистрации нужно сохранить идентификатор заявки. При уточнении информации указывать этот идентификатор. В учебном сценарии статусы: «зарегистрирована», «нужны сведения», «в работе», «завершена». Статус «зарегистрирована» означает, что обращение получено, а не что проблема решена. Срока автоматического перехода между статусами нет.
+
+## З7. Что следует уточнить до реального сообщения
+Организатор должен сообщить календарную дату перехода, адрес формы, канал связи по опасным ситуациям и контакт для вопросов о новом порядке. До получения этих сведений текст для рассылки является проектом. Руководителю важны изменение процесса и открытые вопросы; новичку — простое объяснение; исполнителю — последовательность действий с сохранением исключения З5.
+
+## З8. Задача на занятии
+Сформируйте три разных представления одной памятки. Не меняйте факты для удобства текста. Сокращение не должно убирать условие о текущих заявках, различие между проверкой и выполнением или исключение для опасной ситуации. Все названия, сроки и обстоятельства в этом файле вымышлены.</pre></div></div></details><div class="exercise"><h3>Какой формат нужен?</h3><p>Нужен список, в котором сотрудник отмечает выполненные действия. Выберите формат.</p><label><input type="radio" name="format" value="newbie">Объяснение новичку</label><label><input type="radio" name="format" value="manager">Записка руководителю</label><label><input type="radio" name="format" value="executor">Чек-лист исполнителю</label><button class="action" id="check-format">Проверить логику выбора</button><p class="result" id="format-result" role="status" tabindex="-1"></p></div><div class="card"><p><b>Иллюстрация: Новый порядок: три адресата.</b> Будет добавлена после генерации. Сейчас используйте пояснения и интерактив этого блока.</p></div><article class="card" id="case-versions"><h3>Сравнение двух версий порядка · 60–73 минут</h3><p><b>Показ ведущего и ваше действие.</b> Получите таблицу изменений, затем попросите превратить её в короткую записку руководителю без добавления фактов. Б остаётся проектом. Найдите два неизменных пункта. При молчании сопоставьте А3/Б3 и А4/Б4.</p><div class="dl-grid"><a class="dl" href="../data/cases/versions.docx" download>Исходник · DOCX</a><a class="dl" href="../data/cases/versions.txt" download>Исходник · TXT</a></div><details class=""><summary>Полный синтетический исходник</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="versions-source">Копировать</button></div><pre id="versions-source">СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Две учебные редакции порядка подготовки информационных материалов
+
+## Сопроводительная записка
+Редакция А принята как действующая только внутри вымышленного учебного сценария. Редакция Б — проект для обсуждения; подтверждения её утверждения или даты введения нет. Сопоставление текста не даёт права выбирать действующую норму. При цитировании указывайте редакцию и номер пункта. Имена и реальные организационные реквизиты намеренно не используются.
+
+## Редакция А
+А1. Заказчик направляет запрос на подготовку открытого информационного материала через условную форму «Запрос». В запросе указываются тема, цель и желаемый срок.
+А2. Координатор проверяет наличие обязательных полей. Если данных не хватает, возвращает запрос с перечнем уточнений. Срок такой проверки не установлен.
+А3. Исполнитель готовит черновик по предоставленным источникам. При отсутствии источника отмечает пробел и запрашивает сведения. Вымышленные ссылки не используются.
+А4. Заказчик проверяет содержание черновика. Согласование фиксируется отдельным сообщением. Отсутствие ответа не считается согласованием.
+А5. Исправления направляются одним списком через форму «Запрос». Общий срок внесения исправлений в документе не указан.
+А6. После согласования координатор сохраняет итоговую версию. Порядок хранения черновиков в этой редакции не описан.
+
+## Редакция Б — проект
+Б1. Заказчик направляет запрос через условную форму «Запрос». Обязательные поля: тема, цель, адресат, формат результата и желаемый срок. Внутренние или конфиденциальные сведения в учебную форму не включаются.
+Б2. Координатор проверяет обязательные поля в течение двух рабочих дней после поступления. Если данных не хватает, возвращает запрос с перечнем уточнений. Время подготовки материала отсчитывается после получения полного набора исходных данных.
+Б3. Исполнитель готовит черновик по предоставленным источникам. При отсутствии источника отмечает пробел и запрашивает сведения. Вымышленные ссылки не используются.
+Б4. Заказчик проверяет содержание черновика. Согласование фиксируется отдельным сообщением. Отсутствие ответа не считается согласованием.
+Б5. Исправления направляются одним списком в карточке соответствующего запроса. Общий срок исправления согласуется отдельно. Это изменение относится к передаче замечаний, а не к первичной подаче запроса.
+Б6. После согласования координатор сохраняет итоговую версию и связанную с ней предыдущую редакцию. Конкретный срок хранения, место хранения и права доступа в проекте не заданы.
+
+## Условия задания
+Нужно сравнить шесть пар пунктов. Б3 и Б4 повторяют А3 и А4 без смысловых изменений. Не называйте все пункты новыми. Отдельно покажите добавленные поля в Б1, срок первичной проверки и условие начала подготовки в Б2, изменённый способ передачи замечаний в Б5, расширение состава сохраняемых версий в Б6.
+
+## Вопросы, которые требуют решения человека
+Утверждён ли проект Б? Какова дата перехода? Где будет храниться предыдущая редакция и как долго? Кто определяет права доступа? В тексте нет ответов. Сравнение может подготовить эти вопросы, но не разрешить их. Не создавайте юридические выводы и не ссылайтесь на реальные стандарты: это учебный материал для тренировки точности запроса.</pre></div></div></details><details class=""><summary>Слабый запрос с исходником</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="versions-weak">Копировать</button></div><pre id="versions-weak">Сравни версии регламента.
+
+СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Две учебные редакции порядка подготовки информационных материалов
+
+## Сопроводительная записка
+Редакция А принята как действующая только внутри вымышленного учебного сценария. Редакция Б — проект для обсуждения; подтверждения её утверждения или даты введения нет. Сопоставление текста не даёт права выбирать действующую норму. При цитировании указывайте редакцию и номер пункта. Имена и реальные организационные реквизиты намеренно не используются.
+
+## Редакция А
+А1. Заказчик направляет запрос на подготовку открытого информационного материала через условную форму «Запрос». В запросе указываются тема, цель и желаемый срок.
+А2. Координатор проверяет наличие обязательных полей. Если данных не хватает, возвращает запрос с перечнем уточнений. Срок такой проверки не установлен.
+А3. Исполнитель готовит черновик по предоставленным источникам. При отсутствии источника отмечает пробел и запрашивает сведения. Вымышленные ссылки не используются.
+А4. Заказчик проверяет содержание черновика. Согласование фиксируется отдельным сообщением. Отсутствие ответа не считается согласованием.
+А5. Исправления направляются одним списком через форму «Запрос». Общий срок внесения исправлений в документе не указан.
+А6. После согласования координатор сохраняет итоговую версию. Порядок хранения черновиков в этой редакции не описан.
+
+## Редакция Б — проект
+Б1. Заказчик направляет запрос через условную форму «Запрос». Обязательные поля: тема, цель, адресат, формат результата и желаемый срок. Внутренние или конфиденциальные сведения в учебную форму не включаются.
+Б2. Координатор проверяет обязательные поля в течение двух рабочих дней после поступления. Если данных не хватает, возвращает запрос с перечнем уточнений. Время подготовки материала отсчитывается после получения полного набора исходных данных.
+Б3. Исполнитель готовит черновик по предоставленным источникам. При отсутствии источника отмечает пробел и запрашивает сведения. Вымышленные ссылки не используются.
+Б4. Заказчик проверяет содержание черновика. Согласование фиксируется отдельным сообщением. Отсутствие ответа не считается согласованием.
+Б5. Исправления направляются одним списком в карточке соответствующего запроса. Общий срок исправления согласуется отдельно. Это изменение относится к передаче замечаний, а не к первичной подаче запроса.
+Б6. После согласования координатор сохраняет итоговую версию и связанную с ней предыдущую редакцию. Конкретный срок хранения, место хранения и права доступа в проекте не заданы.
+
+## Условия задания
+Нужно сравнить шесть пар пунктов. Б3 и Б4 повторяют А3 и А4 без смысловых изменений. Не называйте все пункты новыми. Отдельно покажите добавленные поля в Б1, срок первичной проверки и условие начала подготовки в Б2, изменённый способ передачи замечаний в Б5, расширение состава сохраняемых версий в Б6.
+
+## Вопросы, которые требуют решения человека
+Утверждён ли проект Б? Какова дата перехода? Где будет храниться предыдущая редакция и как долго? Кто определяет права доступа? В тексте нет ответов. Сравнение может подготовить эти вопросы, но не разрешить их. Не создавайте юридические выводы и не ссылайтесь на реальные стандарты: это учебный материал для тренировки точности запроса.</pre></div></div></details><details class=""><summary>Структурированный запрос с исходником</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="versions-prompt">Копировать</button></div><pre id="versions-prompt">ЦЕЛЬ И ЗАДАЧА: Сопоставь учебные редакции А и Б по пунктам и покажи изменения.
+КОНТЕКСТ И ИСТОЧНИКИ: только приложенный синтетический документ; адресат указан в формате.
+РОЛЬ: редактор сравнительного обзора документов.
+ОГРАНИЧЕНИЯ: не придумывай сведения, причины, даты, цены, ответственных и согласования. Сохраняй исключения и статус проекта. Недостающее вынеси в вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Таблица: пункт / было (А) / стало (Б) / влияние / вопрос; отдельно неизменные условия и статус редакции Б.
+КРИТЕРИЙ ПРОВЕРКИ: Проект Б не назван действующим; изменение канала не приписано всем обращениям; отсутствующий срок не придуман.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Две учебные редакции порядка подготовки информационных материалов
+
+## Сопроводительная записка
+Редакция А принята как действующая только внутри вымышленного учебного сценария. Редакция Б — проект для обсуждения; подтверждения её утверждения или даты введения нет. Сопоставление текста не даёт права выбирать действующую норму. При цитировании указывайте редакцию и номер пункта. Имена и реальные организационные реквизиты намеренно не используются.
+
+## Редакция А
+А1. Заказчик направляет запрос на подготовку открытого информационного материала через условную форму «Запрос». В запросе указываются тема, цель и желаемый срок.
+А2. Координатор проверяет наличие обязательных полей. Если данных не хватает, возвращает запрос с перечнем уточнений. Срок такой проверки не установлен.
+А3. Исполнитель готовит черновик по предоставленным источникам. При отсутствии источника отмечает пробел и запрашивает сведения. Вымышленные ссылки не используются.
+А4. Заказчик проверяет содержание черновика. Согласование фиксируется отдельным сообщением. Отсутствие ответа не считается согласованием.
+А5. Исправления направляются одним списком через форму «Запрос». Общий срок внесения исправлений в документе не указан.
+А6. После согласования координатор сохраняет итоговую версию. Порядок хранения черновиков в этой редакции не описан.
+
+## Редакция Б — проект
+Б1. Заказчик направляет запрос через условную форму «Запрос». Обязательные поля: тема, цель, адресат, формат результата и желаемый срок. Внутренние или конфиденциальные сведения в учебную форму не включаются.
+Б2. Координатор проверяет обязательные поля в течение двух рабочих дней после поступления. Если данных не хватает, возвращает запрос с перечнем уточнений. Время подготовки материала отсчитывается после получения полного набора исходных данных.
+Б3. Исполнитель готовит черновик по предоставленным источникам. При отсутствии источника отмечает пробел и запрашивает сведения. Вымышленные ссылки не используются.
+Б4. Заказчик проверяет содержание черновика. Согласование фиксируется отдельным сообщением. Отсутствие ответа не считается согласованием.
+Б5. Исправления направляются одним списком в карточке соответствующего запроса. Общий срок исправления согласуется отдельно. Это изменение относится к передаче замечаний, а не к первичной подаче запроса.
+Б6. После согласования координатор сохраняет итоговую версию и связанную с ней предыдущую редакцию. Конкретный срок хранения, место хранения и права доступа в проекте не заданы.
+
+## Условия задания
+Нужно сравнить шесть пар пунктов. Б3 и Б4 повторяют А3 и А4 без смысловых изменений. Не называйте все пункты новыми. Отдельно покажите добавленные поля в Б1, срок первичной проверки и условие начала подготовки в Б2, изменённый способ передачи замечаний в Б5, расширение состава сохраняемых версий в Б6.
+
+## Вопросы, которые требуют решения человека
+Утверждён ли проект Б? Какова дата перехода? Где будет храниться предыдущая редакция и как долго? Кто определяет права доступа? В тексте нет ответов. Сравнение может подготовить эти вопросы, но не разрешить их. Не создавайте юридические выводы и не ссылайтесь на реальные стандарты: это учебный материал для тренировки точности запроса.</pre></div></div></details><p><b>Критерий проверки:</b> Проект Б не назван действующим; изменение канала не приписано всем обращениям; отсутствующий срок не придуман.</p></article><div class="card"><p><b>Иллюстрация: Две редакции: статус и изменения.</b> Будет добавлена после генерации. Сейчас используйте пояснения и интерактив этого блока.</p></div><article class="card" id="case-weeks"><h3>План административных задач по неделям · 73–85 минут</h3><p><b>Показ ведущего и ваше действие.</b> Получите план в таблице, затем чек-лист по неделям с тем же распределением. Проверьте лимиты и зависимости. Баллы не являются часами. Вариант для сверки — в конспекте.</p><div class="dl-grid"><a class="dl" href="../data/cases/weeks.docx" download>Исходник · DOCX</a><a class="dl" href="../data/cases/weeks.txt" download>Исходник · TXT</a></div><details class=""><summary>Полный синтетический исходник</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="weeks-source">Копировать</button></div><pre id="weeks-source">СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Учебный план работ: горизонт четыре недели
+
+## 1. Контекст
+Вымышленная административная группа готовит комплект открытых справочных материалов. Нужно распределить восемь задач по неделям 1–4. Фамилии исполнителей, реальные даты, кабинеты и поминутные графики не используются. Нагрузка выражена в условных баллах сложности. Балл не равен часу, дню или количеству работников. План служит упражнением на заданные ограничения, а не расчётом производственного цикла.
+
+## 2. Доступная ёмкость
+Неделя 1 — не более 5 баллов. Неделя 2 — не более 4 баллов. Неделя 3 — не более 5 баллов. Неделя 4 — не более 4 баллов. Ёмкость уже учитывает прочую занятость группы: добавлять свободные часы или привлекать новых людей без исходных данных нельзя. Перенос ёмкости между неделями не допускается. Необязательно загружать каждую неделю полностью.
+
+## 3. Задачи
+А. Собрать открытые исходные материалы — 2 балла. Выполнить на неделе 1.
+Б. Уточнить вопросы к содержанию — 1 балл. Выполнить после А; разрешено на той же неделе, если порядок внутри недели явно указан.
+В. Подготовить перечень тем — 2 балла. Выполнить после Б; можно на той же неделе при явной последовательности. Завершить не позднее недели 2.
+Г. Подготовить первый черновик памятки — 3 балла. Только после В, в более позднюю неделю.
+Д. Подготовить список вопросов для встречи — 1 балл. Выполнить не позднее недели 2; зависимостей нет.
+Е. Проверить черновик памятки — 2 балла. Только после Г, в более позднюю неделю.
+Ж. Составить итоговую версию — 3 балла. После Е; можно на той же неделе, если последовательность указана.
+З. Подготовить сообщение о готовности — 2 балла. Только после Ж, в более позднюю неделю. Завершить не позднее недели 4.
+
+## 4. Дополнительные ограничения
+Задача выполняется целиком за одну неделю; делить её баллы между неделями нельзя. Для всего набора требуется 16 баллов, доступно 18. Наличие запаса 2 балла само по себе ещё не доказывает выполнимость: нужно проверить зависимости и крайние недели. Порядок внутри недели должен быть виден, если связанные задачи размещены вместе.
+
+## 5. Как оценивать результат
+Проверьте присутствие всех восьми задач ровно один раз, суммы баллов по каждой неделе, последовательность и ограничения по срокам. Если модель сообщает, что плана нет, попросите показать конкретный конфликт. Не разрешайте ей молча увеличить ёмкость. Необходимо отличать предложенный план от утверждённого графика.
+
+## 6. Что не задано
+Не заданы отпуска, реальные трудозатраты, квалификация, исполнители и фактические даты. Не придумывайте их. Если потребуется переход к реальному планированию, эти сведения должен предоставить человек. В текущей практике достаточно условных недель и баллов. Финансовые, технические и производственные данные в сценарии отсутствуют.</pre></div></div></details><details class=""><summary>Слабый запрос с исходником</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="weeks-weak">Копировать</button></div><pre id="weeks-weak">Распредели задачи по неделям.
+
+СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Учебный план работ: горизонт четыре недели
+
+## 1. Контекст
+Вымышленная административная группа готовит комплект открытых справочных материалов. Нужно распределить восемь задач по неделям 1–4. Фамилии исполнителей, реальные даты, кабинеты и поминутные графики не используются. Нагрузка выражена в условных баллах сложности. Балл не равен часу, дню или количеству работников. План служит упражнением на заданные ограничения, а не расчётом производственного цикла.
+
+## 2. Доступная ёмкость
+Неделя 1 — не более 5 баллов. Неделя 2 — не более 4 баллов. Неделя 3 — не более 5 баллов. Неделя 4 — не более 4 баллов. Ёмкость уже учитывает прочую занятость группы: добавлять свободные часы или привлекать новых людей без исходных данных нельзя. Перенос ёмкости между неделями не допускается. Необязательно загружать каждую неделю полностью.
+
+## 3. Задачи
+А. Собрать открытые исходные материалы — 2 балла. Выполнить на неделе 1.
+Б. Уточнить вопросы к содержанию — 1 балл. Выполнить после А; разрешено на той же неделе, если порядок внутри недели явно указан.
+В. Подготовить перечень тем — 2 балла. Выполнить после Б; можно на той же неделе при явной последовательности. Завершить не позднее недели 2.
+Г. Подготовить первый черновик памятки — 3 балла. Только после В, в более позднюю неделю.
+Д. Подготовить список вопросов для встречи — 1 балл. Выполнить не позднее недели 2; зависимостей нет.
+Е. Проверить черновик памятки — 2 балла. Только после Г, в более позднюю неделю.
+Ж. Составить итоговую версию — 3 балла. После Е; можно на той же неделе, если последовательность указана.
+З. Подготовить сообщение о готовности — 2 балла. Только после Ж, в более позднюю неделю. Завершить не позднее недели 4.
+
+## 4. Дополнительные ограничения
+Задача выполняется целиком за одну неделю; делить её баллы между неделями нельзя. Для всего набора требуется 16 баллов, доступно 18. Наличие запаса 2 балла само по себе ещё не доказывает выполнимость: нужно проверить зависимости и крайние недели. Порядок внутри недели должен быть виден, если связанные задачи размещены вместе.
+
+## 5. Как оценивать результат
+Проверьте присутствие всех восьми задач ровно один раз, суммы баллов по каждой неделе, последовательность и ограничения по срокам. Если модель сообщает, что плана нет, попросите показать конкретный конфликт. Не разрешайте ей молча увеличить ёмкость. Необходимо отличать предложенный план от утверждённого графика.
+
+## 6. Что не задано
+Не заданы отпуска, реальные трудозатраты, квалификация, исполнители и фактические даты. Не придумывайте их. Если потребуется переход к реальному планированию, эти сведения должен предоставить человек. В текущей практике достаточно условных недель и баллов. Финансовые, технические и производственные данные в сценарии отсутствуют.</pre></div></div></details><details class=""><summary>Структурированный запрос с исходником</summary><div class="inside"><div class="prompt-box"><div class="prompt-head"><span>Промпт для копирования</span><button class="copy-btn" data-copy="weeks-prompt">Копировать</button></div><pre id="weeks-prompt">ЦЕЛЬ И ЗАДАЧА: Предложи выполнимый план учебных административных задач на четыре недели.
+КОНТЕКСТ И ИСТОЧНИКИ: только приложенный синтетический документ; адресат указан в формате.
+РОЛЬ: помощник по планированию.
+ОГРАНИЧЕНИЯ: не придумывай сведения, причины, даты, цены, ответственных и согласования. Сохраняй исключения и статус проекта. Недостающее вынеси в вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Таблица: неделя / задачи / нагрузка / доступная ёмкость / проверка зависимостей; отдельно ограничения и вопросы.
+КРИТЕРИЙ ПРОВЕРКИ: Суммарно 16 баллов; не превышены недельные лимиты; Е после Г; З после Ж; баллы не названы часами.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+СИНТЕТИЧЕСКИЕ УЧЕБНЫЕ ДАННЫЕ. Все организации, показатели, правила и обстоятельства придуманы. Не являются документами Концерна.
+
+# Учебный план работ: горизонт четыре недели
+
+## 1. Контекст
+Вымышленная административная группа готовит комплект открытых справочных материалов. Нужно распределить восемь задач по неделям 1–4. Фамилии исполнителей, реальные даты, кабинеты и поминутные графики не используются. Нагрузка выражена в условных баллах сложности. Балл не равен часу, дню или количеству работников. План служит упражнением на заданные ограничения, а не расчётом производственного цикла.
+
+## 2. Доступная ёмкость
+Неделя 1 — не более 5 баллов. Неделя 2 — не более 4 баллов. Неделя 3 — не более 5 баллов. Неделя 4 — не более 4 баллов. Ёмкость уже учитывает прочую занятость группы: добавлять свободные часы или привлекать новых людей без исходных данных нельзя. Перенос ёмкости между неделями не допускается. Необязательно загружать каждую неделю полностью.
+
+## 3. Задачи
+А. Собрать открытые исходные материалы — 2 балла. Выполнить на неделе 1.
+Б. Уточнить вопросы к содержанию — 1 балл. Выполнить после А; разрешено на той же неделе, если порядок внутри недели явно указан.
+В. Подготовить перечень тем — 2 балла. Выполнить после Б; можно на той же неделе при явной последовательности. Завершить не позднее недели 2.
+Г. Подготовить первый черновик памятки — 3 балла. Только после В, в более позднюю неделю.
+Д. Подготовить список вопросов для встречи — 1 балл. Выполнить не позднее недели 2; зависимостей нет.
+Е. Проверить черновик памятки — 2 балла. Только после Г, в более позднюю неделю.
+Ж. Составить итоговую версию — 3 балла. После Е; можно на той же неделе, если последовательность указана.
+З. Подготовить сообщение о готовности — 2 балла. Только после Ж, в более позднюю неделю. Завершить не позднее недели 4.
+
+## 4. Дополнительные ограничения
+Задача выполняется целиком за одну неделю; делить её баллы между неделями нельзя. Для всего набора требуется 16 баллов, доступно 18. Наличие запаса 2 балла само по себе ещё не доказывает выполнимость: нужно проверить зависимости и крайние недели. Порядок внутри недели должен быть виден, если связанные задачи размещены вместе.
+
+## 5. Как оценивать результат
+Проверьте присутствие всех восьми задач ровно один раз, суммы баллов по каждой неделе, последовательность и ограничения по срокам. Если модель сообщает, что плана нет, попросите показать конкретный конфликт. Не разрешайте ей молча увеличить ёмкость. Необходимо отличать предложенный план от утверждённого графика.
+
+## 6. Что не задано
+Не заданы отпуска, реальные трудозатраты, квалификация, исполнители и фактические даты. Не придумывайте их. Если потребуется переход к реальному планированию, эти сведения должен предоставить человек. В текущей практике достаточно условных недель и баллов. Финансовые, технические и производственные данные в сценарии отсутствуют.</pre></div></div></details><p><b>Критерий проверки:</b> Суммарно 16 баллов; не превышены недельные лимиты; Е после Г; З после Ж; баллы не названы часами.</p></article><details><summary>Слайд для сверки · откройте после выполнения плана</summary><div class="inside"><div class="card"><p><b>Иллюстрация: Недельный план: проверка ограничений.</b> Будет добавлена после генерации. Сейчас используйте пояснения и интерактив этого блока.</p></div></div></details></section><section class="sec" id="homework"><h2>20 универсальных шаблонов · самостоятельная работа</h2><p>Выберите две задачи. Подставьте учебные данные, сравните общий запрос и структурированный. Для одного материала получите три формата. Сохраните ответы и наблюдение; сдавать работу преподавателю не нужно.</p><p>Скобки обозначают поля для замены. Сложные жанры банка можно отработать в следующих разделах курса.</p><div class="dl-grid"><a class="dl" href="../data/baza_20_zadach.docx" download>20 шаблонов · DOCX</a><a class="dl" href="../data/baza_20_zadach.md" download>20 шаблонов · Markdown</a><a class="dl" href="../data/baza_20_zadach.json" download>20 шаблонов · JSON</a><a class="dl" href="../data/praktikum_5_6_materialy.zip" download>Исходники и раздатка · ZIP</a><a class="dl" href="../data/rabochiy_list_praktikum_5_6.docx" download>Рабочий лист</a><a class="dl" href="../data/prompty_5_cases.docx" download>Полные запросы пяти кейсов</a></div><div class="exercise"><h3>Настройте шаблоны под свою задачу</h3><label>Адресат<input id="bank-audience" class="template-search" placeholder="Например, руководитель группы"></label><label>Объём<input id="bank-length" class="template-search" placeholder="Например, до 150 слов"></label><label>Задача<input id="bank-goal" class="template-search" placeholder="Например, запросить уточнение срока"></label><button class="action" id="adapt-bank">Подставить в 20 шаблонов</button><p id="bank-feedback" class="result" role="status"></p></div><div class="card"><p><b>Иллюстрация: Самостоятельная работа.</b> Будет добавлена после генерации. Сейчас используйте пояснения и интерактив этого блока.</p></div><label for="task-search">Поиск по задаче</label><input id="task-search" type="search" class="template-search" placeholder="Записка, план, сравнение…"><p id="task-count" aria-live="polite">Найдено: 20</p><details class="task-card" data-search="служебная записка документы"><summary>01. Служебная записка · Документы</summary><div class="inside"><p><b>Когда использовать:</b> Обоснуй рассмотрение решения.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-1">Копировать</button></div><pre id="home-1">ЦЕЛЬ И ЗАДАЧА: Обоснуй рассмотрение решения. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: редактор записок.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не называй предложение утверждённым решением. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Ситуация / факты / просьба / вопросы. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не называй предложение утверждённым решением. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="резюме отчёта анализ"><summary>02. Резюме отчёта · Анализ</summary><div class="inside"><p><b>Когда использовать:</b> Выдели главное для адресата.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-2">Копировать</button></div><pre id="home-2">ЦЕЛЬ И ЗАДАЧА: Выдели главное для адресата. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: аналитик.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Сохраняй базу сравнения, единицы и периоды. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Пять выводов с разделом-основанием. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Сохраняй базу сравнения, единицы и периоды. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="сравнение редакций анализ"><summary>03. Сравнение редакций · Анализ</summary><div class="inside"><p><b>Когда использовать:</b> Сопоставь две версии.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-3">Копировать</button></div><pre id="home-3">ЦЕЛЬ И ЗАДАЧА: Сопоставь две версии. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: редактор.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не выбирай действующую редакцию без указания статуса. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Пункт / было / стало / влияние / вопрос. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не выбирай действующую редакцию без указания статуса. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="план по неделям планирование"><summary>04. План по неделям · Планирование</summary><div class="inside"><p><b>Когда использовать:</b> Распредели задачи по неделям.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-4">Копировать</button></div><pre id="home-4">ЦЕЛЬ И ЗАДАЧА: Распредели задачи по неделям. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: планировщик.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не увеличивай ресурсы; покажи конфликт ограничений, если он есть. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Неделя / задачи / нагрузка / лимит / зависимости. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не увеличивай ресурсы; покажи конфликт ограничений, если он есть. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="объяснение новичку коммуникация"><summary>05. Объяснение новичку · Коммуникация</summary><div class="inside"><p><b>Когда использовать:</b> Объясни материал неспециалисту.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-5">Копировать</button></div><pre id="home-5">ЦЕЛЬ И ЗАДАЧА: Объясни материал неспециалисту. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: наставник.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Сохраняй условия, исключения и запреты. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Объяснение / термины / вопросы. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Сохраняй условия, исключения и запреты. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="записка руководителю коммуникация"><summary>06. Записка руководителю · Коммуникация</summary><div class="inside"><p><b>Когда использовать:</b> Кратко представь ситуацию.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-6">Копировать</button></div><pre id="home-6">ЦЕЛЬ И ЗАДАЧА: Кратко представь ситуацию. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: помощник руководителя.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не выдавай неизвестную причину за факт. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Результат / отклонение / требуется решение. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не выдавай неизвестную причину за факт. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="чек-лист исполнителю документы"><summary>07. Чек-лист исполнителю · Документы</summary><div class="inside"><p><b>Когда использовать:</b> Преобразуй порядок в действия.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-7">Копировать</button></div><pre id="home-7">ЦЕЛЬ И ЗАДАЧА: Преобразуй порядок в действия. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: методист.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Сохраняй условные ветви. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Отмечаемые действия и условия остановки. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Сохраняй условные ветви. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="деловое письмо коммуникация"><summary>08. Деловое письмо · Коммуникация</summary><div class="inside"><p><b>Когда использовать:</b> Подготовь нейтральное письмо.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-8">Копировать</button></div><pre id="home-8">ЦЕЛЬ И ЗАДАЧА: Подготовь нейтральное письмо. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: редактор переписки.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не придумывай обещания и санкции. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Тема / текст / ожидаемое действие. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не придумывай обещания и санкции. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="запрос недостающих сведений коммуникация"><summary>09. Запрос недостающих сведений · Коммуникация</summary><div class="inside"><p><b>Когда использовать:</b> Выяви пробелы и запроси сведения.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-9">Копировать</button></div><pre id="home-9">ЦЕЛЬ И ЗАДАЧА: Выяви пробелы и запроси сведения. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: координатор.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не заполняй пробелы догадками. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Короткое письмо и вопросы. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не заполняй пробелы догадками. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="ответ на замечания документы"><summary>10. Ответ на замечания · Документы</summary><div class="inside"><p><b>Когда использовать:</b> Подготовь ответы на замечания.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-10">Копировать</button></div><pre id="home-10">ЦЕЛЬ И ЗАДАЧА: Подготовь ответы на замечания. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: редактор.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не называй предложенную правку выполненной. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Замечание / ответ по источнику / вопрос. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не называй предложенную правку выполненной. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="проверка неоднозначностей анализ"><summary>11. Проверка неоднозначностей · Анализ</summary><div class="inside"><p><b>Когда использовать:</b> Найди противоречия и пропуски.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-11">Копировать</button></div><pre id="home-11">ЦЕЛЬ И ЗАДАЧА: Найди противоречия и пропуски. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: корректор.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не добавляй внешние нормативные требования. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Цитата / проблема / вопрос автору / правка. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не добавляй внешние нормативные требования. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="проект протокола документы"><summary>12. Проект протокола · Документы</summary><div class="inside"><p><b>Когда использовать:</b> Структурируй заметки встречи.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-12">Копировать</button></div><pre id="home-12">ЦЕЛЬ И ЗАДАЧА: Структурируй заметки встречи. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: секретарь.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не назначай ответственных и сроки по догадке. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Обсуждалось / решено / предложения / вопросы. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не назначай ответственных и сроки по догадке. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="сравнение вариантов анализ"><summary>13. Сравнение вариантов · Анализ</summary><div class="inside"><p><b>Когда использовать:</b> Сравни варианты по заданным критериям.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-13">Копировать</button></div><pre id="home-13">ЦЕЛЬ И ЗАДАЧА: Сравни варианты по заданным критериям. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: аналитик.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не добавляй веса и победителя без правила выбора. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Таблица критериев / различия / неизвестное. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не добавляй веса и победителя без правила выбора. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="обращение в поддержку коммуникация"><summary>14. Обращение в поддержку · Коммуникация</summary><div class="inside"><p><b>Когда использовать:</b> Опиши наблюдаемую проблему.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-14">Копировать</button></div><pre id="home-14">ЦЕЛЬ И ЗАДАЧА: Опиши наблюдаемую проблему. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: редактор обращения.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не выдавай симптом за диагноз. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Симптом / условия / что пробовали / неизвестное. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не выдавай симптом за диагноз. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="структура доклада коммуникация"><summary>15. Структура доклада · Коммуникация</summary><div class="inside"><p><b>Когда использовать:</b> Построй последовательность выступления.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-15">Копировать</button></div><pre id="home-15">ЦЕЛЬ И ЗАДАЧА: Построй последовательность выступления. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: редактор доклада.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не придумывай достижения или эффект. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Вступление / тезисы с фактами / вопросы / вывод. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не придумывай достижения или эффект. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="структура презентации коммуникация"><summary>16. Структура презентации · Коммуникация</summary><div class="inside"><p><b>Когда использовать:</b> Разложи материал на слайды.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-16">Копировать</button></div><pre id="home-16">ЦЕЛЬ И ЗАДАЧА: Разложи материал на слайды. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: редактор презентации.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Не придумывай статистику; одна мысль на слайд. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Слайд / тезис / факт / подходящий визуал. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Не придумывай статистику; одна мысль на слайд. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="план фактчекинга анализ"><summary>17. План фактчекинга · Анализ</summary><div class="inside"><p><b>Когда использовать:</b> Выдели утверждения для проверки.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-17">Копировать</button></div><pre id="home-17">ЦЕЛЬ И ЗАДАЧА: Выдели утверждения для проверки. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: помощник исследователя.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Без открытого источника не заявляй, что проверка выполнена. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Утверждение / что проверить / первичный источник. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Без открытого источника не заявляй, что проверка выполнена. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="смена тона коммуникация"><summary>18. Смена тона · Коммуникация</summary><div class="inside"><p><b>Когда использовать:</b> Перепиши спокойно и понятно.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-18">Копировать</button></div><pre id="home-18">ЦЕЛЬ И ЗАДАЧА: Перепиши спокойно и понятно. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: редактор.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Сохрани факты и обязательства; не добавляй признание вины. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Переписанный текст и список изменений. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Сохрани факты и обязательства; не добавляй признание вины. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="три адресата коммуникация"><summary>19. Три адресата · Коммуникация</summary><div class="inside"><p><b>Когда использовать:</b> Представь материал трём адресатам.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-19">Копировать</button></div><pre id="home-19">ЦЕЛЬ И ЗАДАЧА: Представь материал трём адресатам. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: методист.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Во всех версиях сохраняй факты и исключения. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Объяснение новичку / записка руководителю / чек-лист. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Во всех версиях сохраняй факты и исключения. Сопоставьте результат с исходными фактами.</p></div></details><details class="task-card" data-search="шаблон для коллег документы"><summary>20. Шаблон для коллег · Документы</summary><div class="inside"><p><b>Когда использовать:</b> Сделай запрос повторяемым.</p><div class="prompt-box"><div class="prompt-head"><span>Универсальный шаблон</span><button class="copy-btn" data-copy="home-20">Копировать</button></div><pre id="home-20">ЦЕЛЬ И ЗАДАЧА: Сделай запрос повторяемым. Конкретная задача: [МОЯ ЗАДАЧА].
+КОНТЕКСТ И ИСТОЧНИКИ: адресат — [АДРЕСАТ]. Используй только материал ниже; учитывай его статус.
+РОЛЬ: методист.
+ОГРАНИЧЕНИЯ И УСЛОВИЯ ОСТАНОВКИ: Удали конкретные сведения исходного случая; объясни заменяемые поля. Не придумывай факты, цены, даты, контакты и согласования. Если не хватает данных, перечисли вопросы.
+ТРЕБОВАНИЯ К РЕЗУЛЬТАТУ: Поля / шаблон / критерии проверки. Объём: [ОБЪЁМ].
+ПРОВЕРКА: сопоставь выводы с исходником, отметь неподтверждённое. Итог проверяет человек.
+
+ИСХОДНЫЙ МАТЕРИАЛ:
+[ВСТАВЬТЕ СИНТЕТИЧЕСКИЙ ИЛИ РАЗРЕШЁННЫЙ ТЕКСТ]
+</pre></div><p><b>Самопроверка:</b> Удали конкретные сведения исходного случая; объясни заменяемые поля. Сопоставьте результат с исходными фактами.</p></div></details></section></main><footer class="page-foot">ДПО-1 · Практикумы 5–6 · Синтетические данные</footer><script>/* Локальные интерактивы практикумов 5–6: данные в модель не отправляются. */
+document.querySelectorAll('[data-copy]').forEach(button=>button.addEventListener('click',async()=>{const node=document.getElementById(button.dataset.copy);try{await navigator.clipboard.writeText(node.textContent);button.textContent='Скопировано';}catch{const range=document.createRange();range.selectNodeContents(node);const selection=window.getSelection();selection.removeAllRanges();selection.addRange(range);button.textContent='Текст выделен — Ctrl+C';}setTimeout(()=>button.textContent='Копировать',2200);}));
+const links=[...document.querySelectorAll('.nav-link')],sections=[...document.querySelectorAll('main > section[id]')];function updateNav(){let current=sections[0];sections.forEach(section=>{if(section.getBoundingClientRect().top<=140)current=section;});links.forEach(link=>link.classList.toggle('active',current&&link.hash==='#'+current.id));}window.addEventListener('scroll',updateNav,{passive:true});window.addEventListener('load',updateNav);updateNav();
+const labels=['Цель и задача','Контекст и источники','Роль','Ограничения и остановка','Результат и проверка'];document.getElementById('build-prompt').addEventListener('click',()=>{document.getElementById('built-prompt').textContent=labels.map((label,index)=>label+': '+document.getElementById('field-'+index).value.trim()).join('\n');});document.getElementById('reset-builder').addEventListener('click',()=>{document.querySelectorAll('[data-default]').forEach(field=>field.value=field.dataset.default);document.getElementById('built-prompt').textContent='Заполните пять полей и нажмите «Собрать улучшенный запрос».';});
+document.getElementById('check-quality').addEventListener('click',()=>{const checked=[...document.querySelectorAll('[data-quality]')].filter(item=>item.checked).length;document.getElementById('quality-result').textContent=checked===4?'Верно: по вашим отметкам соблюдены четыре критерия. Это ваша оценка прочитанного ответа; страница не проверяет текст модели автоматически.':'По вашим отметкам соблюдено '+checked+' из 4 критериев. Найдите в ответе пример нарушения неотмеченного критерия и уточните запрос. Не ставьте галочку, если условие не выполнено.';});
+document.getElementById('check-format').addEventListener('click',()=>{const selected=document.querySelector('input[name="format"]:checked');const result=document.getElementById('format-result');const answers={newbie:'Пока не подходит: объяснение новичку помогает понять материал, но здесь нужен список отмечаемых действий. Выберите формат для исполнителя.',manager:'Пока не подходит: записка руководителю сообщает краткий статус. Для выполнения шагов нужен чек-лист исполнителя.',executor:'Верно: исполнителю нужен чек-лист с отдельными действиями. Меняется форма ответа; исходные факты остаются теми же. Даты и ответственных нельзя добавлять по догадке.'};result.textContent=selected?answers[selected.value]:'Выберите один из трёх вариантов выше. Для этой ситуации нужен формат, в котором отмечают выполненные действия.';result.style.display='block';result.style.color='#002060';result.scrollIntoView({block:'center',behavior:'auto'});result.focus({preventScroll:true});});
+const search=document.getElementById('task-search');if(search)search.addEventListener('input',()=>{const query=search.value.toLocaleLowerCase('ru').trim();let count=0;document.querySelectorAll('.task-card').forEach(card=>{card.hidden=!card.dataset.search.includes(query);if(!card.hidden)count++;});document.getElementById('task-count').textContent='Найдено: '+count;});
+document.getElementById('build-prompt').addEventListener('click',()=>{document.getElementById('built-prompt').textContent+='\n\nИСХОДНЫЙ МАТЕРИАЛ:\n'+document.getElementById('source-material').textContent;});
+const dialog=document.createElement('dialog');dialog.className='lightbox-native';dialog.innerHTML='<button type="button">Закрыть</button><img alt="Увеличенная инфографика">';document.body.append(dialog);let lastFocus;dialog.querySelector('button').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});dialog.addEventListener('close',()=>lastFocus&&lastFocus.focus());document.querySelectorAll('[data-lightbox]').forEach(card=>{const open=()=>{const image=card.querySelector('img');if(!image.complete||!image.naturalWidth)return;lastFocus=card;dialog.querySelector('img').src=image.src;dialog.querySelector('img').alt=image.alt;dialog.showModal();};card.addEventListener('click',open);card.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();open();}});});
+
+
+document.querySelectorAll('[data-control]').forEach(button=>button.addEventListener('click',()=>{document.getElementById('control-result').textContent=button.dataset.control;}));
+const bankOriginals=new Map([...document.querySelectorAll('.task-card pre')].map(node=>[node.id,node.textContent]));
+document.getElementById('adapt-bank').addEventListener('click',()=>{const values=[['[АДРЕСАТ]',document.getElementById('bank-audience').value],['[ОБЪЁМ]',document.getElementById('bank-length').value],['[МОЯ ЗАДАЧА]',document.getElementById('bank-goal').value]];bankOriginals.forEach((text,id)=>{values.forEach(([key,value])=>{if(value.trim())text=text.replaceAll(key,value.trim());});document.getElementById(id).textContent=text;});document.getElementById('bank-feedback').textContent='Поля подставлены. Добавьте исходник и проверьте выбранный шаблон. Скачиваемый файл содержит исходные универсальные шаблоны.';});
+</script></body></html>
